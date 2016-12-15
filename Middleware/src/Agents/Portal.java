@@ -10,5 +10,10 @@ package Agents;
  * @author chris
  */
 public class Portal {
+
+	public Portal() {
+		System.out.println("I am a test");
+	}
 	
+
 }
