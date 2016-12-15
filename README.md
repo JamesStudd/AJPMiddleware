@@ -19,7 +19,8 @@ Basic Functionality
 GUI
 
 **Deadlines**  
-?
+
+1st Jan
 
 *****
 **Task**  
@@ -35,7 +36,8 @@ _Handle Message_ method
 _Update Node_ method  
 
 **Deadlines**  
-?
+
+24th December
 
 *****
 ### Sean  
@@ -51,7 +53,8 @@ Super class that all agents will inherit
 Basic functionality - Constructor
 
 **Deadlines**  
-?
+
+19th December
 
 *****
 ### Chris  
@@ -70,7 +73,8 @@ _Handle Message_ method
 _Merge_ method  
 
 **Deadlines**  
-?
+
+24th December
 
 *****  
 **Task**  
@@ -83,7 +87,8 @@ Adding all of the seperate files into 1 main project, making sure they all funct
 Put it all together
 
 **Deadlines**  
-?
+
+10th January
 
 *****
 ### Matt
@@ -101,7 +106,8 @@ U2U message
 Error message  
 
 **Deadlines**  
-?
+
+25th December
 
 *****
 
