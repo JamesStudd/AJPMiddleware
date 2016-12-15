@@ -20,7 +20,8 @@ GUI
 
 **Deadlines**  
 
-1st Jan
+Basics - 25th December
+GUI    - 1st Jan
 
 *****
 **Task**  
@@ -37,7 +38,8 @@ _Update Node_ method
 
 **Deadlines**  
 
-24th December
+Constructor , Send, Handle 25th December
+Update node  - 1st Jan
 
 *****
 ### Sean  
@@ -74,7 +76,7 @@ _Merge_ method
 
 **Deadlines**  
 
-24th December
+25th December
 
 *****  
 **Task**  
@@ -107,7 +109,8 @@ Error message
 
 **Deadlines**  
 
-25th December
+Basics - 25th December
+System, U2U, Error - 1st January
 
 *****
 
