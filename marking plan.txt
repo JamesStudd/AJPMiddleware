@@ -1,0 +1,28 @@
+Marking Notess
+
+
+
+Strengths
+--------------
+Agentware was a good choice for the node monitor
+Good design
+Good rationale on why we chose what we did
+
+
+Weaknesses
+--------------
+No testing plan
+Think about scalability / extensibility
+Better work plan needed - deadlines
+
+
+Other notes
+--------------
+Most, not all, activities can be locked down by blocking queue, make sure everything is going through a wait notify.
+Keep the program lightweight.
+
+
+Initial Marks
+--------------
+16/20 Design
+3/10 Work Plan
