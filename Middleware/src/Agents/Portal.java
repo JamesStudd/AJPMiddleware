@@ -17,18 +17,20 @@ import javax.management.monitor.Monitor;
  *
  * @author chris
  */
-public class Portal implements Runnable{
-
+public class Portal extends MetaAgent {
 	
 	
 	//The children of the node
-	private Set<UserAgent> children = new HashSet<UserAgent>();
+	private Set<MetaAgent> children = new HashSet<MetaAgent>();
 
 	//The direct parent of the node
-	private UserAgent parent = null;
+	private MetaAgent parent = null;
 
 	//Should be maybe moved to the meta agent, this of course depending on what we do with the nodeMonitor
-	private HashMap<UserAgent, UserAgent> registeredAddresses = new HashMap<UserAgent, UserAgent>();
+	private HashMap<MetaAgent, MetaAgent> registeredAddresses = new HashMap<MetaAgent, MetaAgent>();
+        
+        //Undelivered messages
+        private HashMap<MetaAgent, Message> lostMessages = new HashMap<MetaAgent, Message>();
 
 	//This should be in the meta object
 	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
@@ -46,17 +48,22 @@ public class Portal implements Runnable{
 	}
 
 	//Adds a node to its children
-	private void addChild(UserAgent child){
+	private void addChild(MetaAgent child){
 		children.add(child);
 	}
+        
+        //Removes a node from its children
+        private void removeChild(MetaAgent child){
+            children.remove(child);
+        }
 
 	//Adds a monitor to report to with messages
-	private void addMonitor(Monitor mon){
+	private void addMonitor(MetaAgent mon){
 		monitors.add(mon);
 	}
 
 	//Removes a monitor 
-	private void removeMontior(Monitor mon){
+	private void removeMontior(MetaAgent mon){
 		monitors.remove(mon);
 	}
 	
@@ -67,7 +74,7 @@ public class Portal implements Runnable{
 
 	//Forwards a message on to the recepients 
 	private void sendMessage(Message message){
-		UserAgent recepient = message.getRecepient();
+		MetaAgent recepient = message.getRecepient();
 		if(registeredAddresses.containsKey(recepient)){
 			registeredAddresses.get(recepient).addToQueue(message);
 		}
@@ -87,10 +94,13 @@ public class Portal implements Runnable{
 
 	//Handles a message pull
 	private void handle(Message message){
-		updateMonitors(message);
-		
-
+		updateMonitors(message);		
 	}
+        
+        //Merge 2 portals together
+        private void mergePortal(MetaAgent portal){
+            //something about merging portals here
+        }
 
 	@Override
 	public void run() {
