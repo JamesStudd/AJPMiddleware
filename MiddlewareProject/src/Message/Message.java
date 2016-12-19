@@ -1,25 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+package Messages;
 /**
  *
  * @author Matthew
  */
-package Message;
-
+import Agents.MetaAgent;
+import Messages.MessageType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-public class Message {
-    /**
-     *Stores the message to be sent to the recipient
-     */
-    private String messageText;
+public class Message <T>{
+
+
+    //The type of object that is being passed out
+    private T messageObject;
+
+    private MessageType type = MessageType.ERROR;
+
     /**
      *Stores the messages ID number
      */
@@ -27,24 +25,26 @@ public class Message {
     /**
      *Stores the name of the sender
      */
-    private String sender;
+    private MetaAgent sender;
     /**
      *Stores the previous portal that forwarded the message
      */
-    private String previousPortal;
-    /**
-     *Stores the messages intended recipient
-     */
-    private String recipient;
+
+    private MetaAgent recipient;
     /**
      *Stores the date the message was sent
      */
     private Calendar date = new GregorianCalendar();
+
+    //The type of message the object is
+    MessageType typeOfMessage;
     
-    public Message(String messageText, String sender, String recipient){
-        this.messageText = messageText;
+    public Message(MessageType type, MetaAgent sender, MetaAgent recipient, T messageObject){
         this.sender = sender;
         this.recipient = recipient;
+	this.typeOfMessage = type;
+	this.messageObject = messageObject;
+	this.type = type;
         date = Calendar.getInstance();
         
         /**
@@ -52,8 +52,6 @@ public class Message {
         */
         Random random = new Random();
         id = random.nextInt(100000);
-        
-        
     }
     
     /**
@@ -64,49 +62,23 @@ public class Message {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
         return dateFormat.format(date.getTime());
     }
-    
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+
+    //Gets the message item
+    public T retrieveMessageItem(){
+	    return messageObject;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public MessageType getMessageType(){
+	    return type;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public void setPreviousPortal(String previousPortal) {
-        this.previousPortal = previousPortal;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    public void setDate(Calendar date) {
-        this.date = date;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getSender() {
+    public MetaAgent getSender() {
         return sender;
     }
 
-    public String getPreviousPortal() {
-        return previousPortal;
-    }
 
-    public String getRecipient() {
+    public MetaAgent getRecipient() {
         return recipient;
     }
 
@@ -114,5 +86,3 @@ public class Message {
         return date;
     }  
 }
-
-
