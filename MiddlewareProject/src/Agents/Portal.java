@@ -5,7 +5,8 @@
  */
 package Agents;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Message;
+import Messages.Message;
+import Messages.MessageType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,7 +44,8 @@ public class Portal extends MetaAgent {
 
 
 	//Constructor starts the thread
-	public Portal() {
+	public Portal(String name) {
+		super(name);
 		thread.start();
 	}
 
@@ -90,11 +92,79 @@ public class Portal extends MetaAgent {
 		while(it.hasNext()){
 			it.next().addToQueue(Message message);
 		}
+
+	}
+
+	private boolean isForMe(MetaAgent x){
+		return x == this;
+	}
+
+	//Runs through all the children and updates with current addressbook
+	private void updateChildrenWithAddressBook(){
+
+		for (MetaAgent x : children){
+			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses));
+		}
+	}
+
+	//Updates parent with address book
+	private void updateParentWithAddressBook(){
+		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, registeredAddresses));
+	}
+
+	//Adds a node  to the portals children and updates the address
+	private void addNode(MetaAgent node){
+
+		children.add(node);
+		registeredAddresses.put(node, this);
+		updateChildrenWithAddressBook();
+		if(node.getScope() == null || node.getScope() != this)
+			updateParentWithAddressBook();
+
+	}
+
+
+	//Extracts the message details and handles as appropriate
+	private void extractMessageDetailsAndHandle(Message message){
+		
+		switch(message.getMessageType()){
+
+			case PASS_MESSAGE:
+				String theMessage = (String) message.retrieveMessageItem();
+				break;
+			case ADD_NODE:
+				addNode((MetaAgent) message.retrieveMessageItem());
+
+
+			
+		}
+
+	}
+
+	//Looks up the message address and passes on the message if its held in registered addresses
+	//otherwise an error is send back and the message added to lost messages
+	private void lookUpAndPassOn(Message message){
+
+		if(registeredAddresses.containsKey(message.getRecipient())){
+			registeredAddresses.get(message.getRecipient()).addToQueue(message);
+		}
+		else{
+			//need to amend to make bounded and also think about what happens if it is already contained in the map
+			lostMessages.put(message.getRecipient(), message);
+			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_FOUND_IN_LOST_PROPERTY, this, message.getSender(), null));
+		}
+
 	}
 
 	//Handles a message pull
 	private void handle(Message message){
 		updateMonitors(message);		
+		if(isForMe(message.getRecipient())){
+			extractMessageDetailsAndHandle(message);
+		}
+		else{
+			lookUpAndPassOn(message);
+		}
 	}
         
         //Merge 2 portals together
