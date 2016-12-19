@@ -16,6 +16,7 @@ public class Message <T>{
     //The type of object that is being passed out
     private T messageObject;
 
+    private MessageType type = MessageType.ERROR;
 
     /**
      *Stores the messages ID number
@@ -43,6 +44,7 @@ public class Message <T>{
         this.recipient = recipient;
 	this.typeOfMessage = type;
 	this.messageObject = messageObject;
+	this.type = type;
         date = Calendar.getInstance();
         
         /**
@@ -67,6 +69,9 @@ public class Message <T>{
 	    return messageObject;
     }
 
+    public MessageType getMessageType(){
+	    return type;
+    }
 
     public MetaAgent getSender() {
         return sender;
