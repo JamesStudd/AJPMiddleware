@@ -17,6 +17,12 @@ import javax.management.monitor.Monitor;
  *
  * @author Sean
  */public abstract class MetaAgent implements Runnable {
+     
+        public MetaAgent(String name) {       
+       }
+        
+        //Name for user ease/debugging
+        private String name;
 
 	//This should be in the meta object
 	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();

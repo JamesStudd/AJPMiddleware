@@ -28,6 +28,9 @@ public class Portal extends MetaAgent {
 
 	//Should be maybe moved to the meta agent, this of course depending on what we do with the nodeMonitor
 	private HashMap<MetaAgent, MetaAgent> registeredAddresses = new HashMap<MetaAgent, MetaAgent>();
+        
+        //Undelivered messages
+        private HashMap<MetaAgent, Message> lostMessages = new HashMap<MetaAgent, Message>();
 
 	//This should be in the meta object
 	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
@@ -48,14 +51,19 @@ public class Portal extends MetaAgent {
 	private void addChild(MetaAgent child){
 		children.add(child);
 	}
+        
+        //Removes a node from its children
+        private void removeChild(MetaAgent child){
+            children.remove(child);
+        }
 
 	//Adds a monitor to report to with messages
-	private void addMonitor(Monitor mon){
+	private void addMonitor(MetaAgent mon){
 		monitors.add(mon);
 	}
 
 	//Removes a monitor 
-	private void removeMontior(Monitor mon){
+	private void removeMontior(MetaAgent mon){
 		monitors.remove(mon);
 	}
 	
@@ -88,6 +96,11 @@ public class Portal extends MetaAgent {
 	private void handle(Message message){
 		updateMonitors(message);		
 	}
+        
+        //Merge 2 portals together
+        private void mergePortal(MetaAgent portal){
+            //something about merging portals here
+        }
 
 	@Override
 	public void run() {
