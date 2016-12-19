@@ -19,19 +19,19 @@ import javax.management.monitor.Monitor;
  */
 public class UserAgent extends MetaAgent {
         
-    
-        public UserAgent(MetaAgent scope) {
-            super(name, scope);
+        //constructor for UserAgent holds a name for now, not entirely sure how to overload these and that needs doing
+        public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
+            super(name);
+            this.scope = scope;
+            this. parent = parent;
         }
-    
+        
+        //Scope defined by a MetaAgent, furthest away point the node can talk to, will be a portal.
         private MetaAgent scope;
+        
+        //The direct parent of the node
+	private MetaAgent parent = null;
 
-	//This should be in the meta object
-	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
-
-	//Should be in the meta
-	private Thread thread = new Thread();
-	
 	//Public enabling others to add messages to its queue
 	public void addToQueue(Message message){
 		queue.add(message);
