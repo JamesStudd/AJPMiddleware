@@ -135,11 +135,29 @@ public class Portal extends MetaAgent {
 
 	}
 
+	//Looks up the message address and passes on the message if its held in registered addresses
+	//otherwise an error is send back and the message added to lost messages
+	private void lookUpAndPassOn(Message message){
+
+		if(registeredAddresses.containsKey(message.getRecipient())){
+			registeredAddresses.get(message.getRecipient()).addToQueue(message);
+		}
+		else{
+			//need to amend to make bounded
+			lostMessages.put(message.getRecipient(), message);
+			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_FOUND_IN_LOST_PROPERTY, this, message.getSender(), null));
+		}
+
+	}
+
 	//Handles a message pull
 	private void handle(Message message){
 		updateMonitors(message);		
 		if(isForMe(message.getRecipient())){
 			extractMessageDetailsAndHandle(message);
+		}
+		else{
+			lookUpAndPassOn(message);
 		}
 	}
         
