@@ -5,13 +5,8 @@
  */
 package Agents;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Message;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import Messages.Message;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.management.monitor.Monitor;
 
 /**
  *
@@ -21,6 +16,8 @@ import javax.management.monitor.Monitor;
         public MetaAgent(String name) {       
        }
         
+	private Portal scope;
+
         //Name for user ease/debugging
         private String name;
 
@@ -34,6 +31,11 @@ import javax.management.monitor.Monitor;
 	public void addToQueue(Message message){
 		queue.add(message);
 	}
+
+	public Portal getScope(){
+		return scope;
+	}
+
 
 	//Handles a message pull
 	private void handle(Message message){
