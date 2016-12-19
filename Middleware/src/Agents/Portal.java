@@ -5,7 +5,8 @@
  */
 package Agents;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Message;
+import Messages.Message;
+import Messages.MessageType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -91,11 +92,55 @@ public class Portal extends MetaAgent {
 		while(it.hasNext()){
 			it.next().addToQueue(Message message);
 		}
+
+	}
+
+	private boolean isForMe(MetaAgent x){
+		return x == this;
+	}
+
+	private void updateChildrenWithAddressBook(){
+
+		for (MetaAgent x : children){
+			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses));
+		}
+	}
+
+	private void updateParentWithAddressBook(){
+		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, registeredAddresses));
+	}
+	private void addNode(MetaAgent node){
+		
+		children.add(node);
+		registeredAddresses.put(node, this);
+		updateChildrenWithAddressBook();
+		if(node.getScope() == null || node.getScope() != this)
+			updateParentWithAddressBook();
+
+	}
+
+	private void extractMessageDetailsAndHandle(Message message){
+		
+		switch(message.getMessageType()){
+
+			case PASS_MESSAGE:
+				String theMessage = (String) message.retrieveMessageItem();
+				break;
+			case ADD_NODE:
+				addNode((MetaAgent) message.retrieveMessageItem());
+
+
+			
+		}
+
 	}
 
 	//Handles a message pull
 	private void handle(Message message){
 		updateMonitors(message);		
+		if(isForMe(message.getRecipient())){
+			extractMessageDetailsAndHandle(message);
+		}
 	}
         
         //Merge 2 portals together
