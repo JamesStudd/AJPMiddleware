@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+package Messages;
 /**
  *
  * @author Matthew
@@ -15,11 +10,13 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-public class Message {
-    /**
-     *Stores the message to be sent to the recipient
-     */
-    private String messageText;
+public class Message <T>{
+
+
+    //The type of object that is being passed out
+    private T messageObject;
+
+
     /**
      *Stores the messages ID number
      */
@@ -38,12 +35,14 @@ public class Message {
      */
     private Calendar date = new GregorianCalendar();
 
+    //The type of message the object is
     MessageType typeOfMessage;
     
-    public Message(MessageType type, MetaAgent sender, MetaAgent recipient){
+    public Message(MessageType type, MetaAgent sender, MetaAgent recipient, T messageObject){
         this.sender = sender;
         this.recipient = recipient;
 	this.typeOfMessage = type;
+	this.messageObject = messageObject;
         date = Calendar.getInstance();
         
         /**
@@ -61,11 +60,13 @@ public class Message {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
         return dateFormat.format(date.getTime());
     }
-    
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+
+    //Gets the message item
+    public T retrieveMessageItem(){
+	    return messageObject;
     }
+
 
     public MetaAgent getSender() {
         return sender;
