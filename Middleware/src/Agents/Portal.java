@@ -43,7 +43,8 @@ public class Portal extends MetaAgent {
 
 
 	//Constructor starts the thread
-	public Portal() {
+	public Portal(String name) {
+		super(name);
 		thread.start();
 	}
 
