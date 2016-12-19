@@ -8,6 +8,8 @@
  *
  * @author Matthew
  */
+import Agents.MetaAgent;
+import Messages.MessageType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,24 +27,23 @@ public class Message {
     /**
      *Stores the name of the sender
      */
-    private String sender;
+    private MetaAgent sender;
     /**
      *Stores the previous portal that forwarded the message
      */
-    private String previousPortal;
-    /**
-     *Stores the messages intended recipient
-     */
-    private String recipient;
+
+    private MetaAgent recipient;
     /**
      *Stores the date the message was sent
      */
     private Calendar date = new GregorianCalendar();
+
+    MessageType typeOfMessage;
     
-    public Message(String messageText, String sender, String recipient){
-        this.messageText = messageText;
+    public Message(MessageType type, MetaAgent sender, MetaAgent recipient){
         this.sender = sender;
         this.recipient = recipient;
+	this.typeOfMessage = type;
         date = Calendar.getInstance();
         
         /**
@@ -50,8 +51,6 @@ public class Message {
         */
         Random random = new Random();
         id = random.nextInt(100000);
-        
-        
     }
     
     /**
@@ -68,43 +67,12 @@ public class Message {
         this.messageText = messageText;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public void setPreviousPortal(String previousPortal) {
-        this.previousPortal = previousPortal;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    public void setDate(Calendar date) {
-        this.date = date;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getSender() {
+    public MetaAgent getSender() {
         return sender;
     }
 
-    public String getPreviousPortal() {
-        return previousPortal;
-    }
 
-    public String getRecipient() {
+    public MetaAgent getRecipient() {
         return recipient;
     }
 
