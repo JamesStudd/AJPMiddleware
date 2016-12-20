@@ -7,6 +7,7 @@ package Agents;
 
 import Messages.Message;
 import Messages.MessageType;
+import Utility.BoundedHashMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +32,7 @@ public class Portal extends MetaAgent {
 	private HashMap<MetaAgent, MetaAgent> registeredAddresses = new HashMap<MetaAgent, MetaAgent>();
 
 	//Undelivered messages
-	private HashMap<MetaAgent, Message> lostMessages = new HashMap<MetaAgent, Message>();
+	private BoundedHashMap<MetaAgent, Message> lostMessages = new BoundedHashMap<MetaAgent, Message>(5);
 
 	//This should be in the meta object
 	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
@@ -169,9 +170,12 @@ public class Portal extends MetaAgent {
 		if (registeredAddresses.containsKey(message.getRecipient())) {
 			registeredAddresses.get(message.getRecipient()).addToQueue(message);
 		} else {
-			//need to amend to make bounded and also think about what happens if it is already contained in the map
-			lostMessages.put(message.getRecipient(), message);
+			//Need to think about what happens if a message is already in lost messages to an agent, meaning we will have a duplication and overide
+			Message removed = lostMessages.putAndRetrieveLostValue(message.getRecipient(), message);
 			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_IN_LOST_PROPERTY, this, message.getSender(), null));
+			if(removed!= null){
+				registeredAddresses.get(removed.getSender()).addToQueue(new Message(MessageType.FAILED_TO_DELIVER, this, message.getSender(), removed));
+			}
 		}
 
 	}
