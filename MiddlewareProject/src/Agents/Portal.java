@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.management.monitor.Monitor;
 
 /**
  *
@@ -123,6 +122,18 @@ public class Portal extends MetaAgent {
 
 	}
 
+	private void updateAddressBook(Message message){
+		HashMap<MetaAgent, MetaAgent> passedIn = (HashMap < MetaAgent, MetaAgent
+								>) message.retrieveMessageItem();
+		if(passedIn.equals(registeredAddresses)){
+			return;
+		}
+		
+		registeredAddresses.putAll(passedIn);
+
+		updateChildrenWithAddressBook();
+		
+	}
 
 	//Extracts the message details and handles as appropriate
 	private void extractMessageDetailsAndHandle(Message message){
@@ -134,6 +145,9 @@ public class Portal extends MetaAgent {
 				break;
 			case ADD_NODE:
 				addNode((MetaAgent) message.retrieveMessageItem());
+				break;
+			case UPDATE_ADDRESSES:
+				updateAddressBook(message);
 
 
 			
