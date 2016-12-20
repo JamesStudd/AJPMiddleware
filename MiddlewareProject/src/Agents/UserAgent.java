@@ -20,26 +20,24 @@ import javax.management.monitor.Monitor;
 public class UserAgent extends MetaAgent {
         
     
-        public UserAgent(MetaAgent scope) {
-            super(name, scope);
+        //constructor for UserAgent
+        public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
+            super(name);
+            this.scope = scope;
+            this.parent = parent;
         }
     
         private MetaAgent scope;
-
-	//This should be in the meta object
-	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
-
-	//Should be in the meta
-	private Thread thread = new Thread();
+        
+        private MetaAgent parent;
 	
 	//Public enabling others to add messages to its queue
 	public void addToQueue(Message message){
 		queue.add(message);
-	}
-        
-        //public void newMessage (all params needed for message) {};
+	}      
         
         //public void sendMessage (Message message)();
+        //parent.addToQueue?
 
 	//Handles a message pull
 	private void handle(Message message){
@@ -64,4 +62,3 @@ public class UserAgent extends MetaAgent {
     
 
     
-}

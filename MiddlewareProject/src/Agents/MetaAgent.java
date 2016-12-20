@@ -18,8 +18,11 @@ import javax.management.monitor.Monitor;
  * @author Sean
  */public abstract class MetaAgent implements Runnable {
      
-        public MetaAgent(String name) {       
-       }
+        //constructor for metaagents only takes in name atm, needs to have other things overloaded onto it from subclasses like scope, parent
+        public MetaAgent(String name) {   
+            thread.start();
+            this.name = name;
+        }
         
         //Name for user ease/debugging
         private String name;

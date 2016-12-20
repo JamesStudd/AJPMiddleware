@@ -21,6 +21,12 @@ import java.util.stream.Collectors;
  * @author chris
  */
 public class Portal extends MetaAgent {
+    
+        //constructor for portal, is this how the constructor should look?
+        public Portal(String name, MetaAgent parent) {
+            super(name);
+            this.parent = parent;
+        }
 
 	//The children of the node
 	private Set<MetaAgent> children = new HashSet<MetaAgent>();
@@ -34,20 +40,9 @@ public class Portal extends MetaAgent {
 	//Undelivered messages
 	private BoundedHashMap<MetaAgent, Message> lostMessages = new BoundedHashMap<MetaAgent, Message>(5);
 
-	//This should be in the meta object
-	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
-
-	//Should be in the meta
-	private Thread thread = new Thread();
-
 	//A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
 
-	//Constructor starts the thread
-	public Portal(String name) {
-		super(name);
-		thread.start();
-	}
 
 	//Adds a node to its children
 	private void addChild(MetaAgent child) {
