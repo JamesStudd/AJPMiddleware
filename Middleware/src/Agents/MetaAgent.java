@@ -11,7 +11,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  *
  * @author Sean
- */public abstract class MetaAgent implements Runnable {
+ * 
+ * 
+ */
+
+//Adding a comment to check we are working ok 
+public abstract class MetaAgent implements Runnable {
      
         //constructor for metaagents only takes in name atm, needs to have other things overloaded onto it from subclasses like scope, parent
         public MetaAgent(String name) {   
