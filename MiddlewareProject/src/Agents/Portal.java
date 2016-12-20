@@ -99,16 +99,16 @@ public class Portal extends MetaAgent {
 	}
 
 	//Runs through all the children and updates with current addressbook
-	private void updateChildrenWithAddressBook(){
+	private void updateChildrenWithAddressBook(MetaAgent scope){
 
 		for (MetaAgent x : children){
-			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses));
+			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses, scope));
 		}
 	}
 
 	//Updates parent with address book
-	private void updateParentWithAddressBook(){
-		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, registeredAddresses));
+	private void updateParentWithAddressBook(MetaAgent scope){
+		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, registeredAddresses, scope));
 	}
 
 	//Adds a node  to the portals children and updates the address
@@ -116,10 +116,13 @@ public class Portal extends MetaAgent {
 
 		children.add(node);
 		registeredAddresses.put(node, this);
-		updateChildrenWithAddressBook();
-		if(node.getScope() == null || node.getScope() != this)
-			updateParentWithAddressBook();
+		updateChildrenWithAddressBook(node.getScope());
+		if(!scopedHere(node.getScope()))
+			updateParentWithAddressBook(node.getScope());
+	}
 
+	private boolean scopedHere(MetaAgent scope){
+		return scope == this;
 	}
 
 	private void updateAddressBook(Message message){
@@ -130,8 +133,10 @@ public class Portal extends MetaAgent {
 		}
 		
 		registeredAddresses.putAll(passedIn);
-
-		updateChildrenWithAddressBook();
+		updateChildrenWithAddressBook(message.getScope());
+		if(!scopedHere(message.getScope())){
+			updateParentWithAddressBook(message.getScope());
+		}
 		
 	}
 
