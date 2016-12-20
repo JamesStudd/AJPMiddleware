@@ -75,7 +75,7 @@ public class Portal extends MetaAgent {
 
 	//Forwards a message on to the recepients 
 	private void sendMessage(Message message) {
-		MetaAgent recepient = message.getRecepient();
+		MetaAgent recepient = message.getRecipient();
 		if (registeredAddresses.containsKey(recepient)) {
 			registeredAddresses.get(recepient).addToQueue(message);
 		} else {
@@ -88,30 +88,28 @@ public class Portal extends MetaAgent {
 		Iterator<NodeMonitor> it = monitors.iterator();
 		while (it.hasNext()) {
 			it.next().addToQueue(Message message
-		
-	
-
 	);
 		}
 
 	}
 
+	//If the passes meta agent is a reference to this object
 	private boolean isForMe(MetaAgent x) {
 		return x == this;
 	}
 
 	//Runs through all the children and updates with current addressbook
-	private void updateChildrenWithAddressBook(MetaAgent scope) {
+	private void updateChildrenWithAddressBook() {
 
 		for (MetaAgent x : children) {
-			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses, scope));
+			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses));
 		}
 	}
 
-	//Updates parent with address book
+	//Updates parent with address book, filters any node addresses whos scope is this node
 	private void updateParentWithAddressBook() {
 		Map<MetaAgent, MetaAgent> filtered = registeredAddresses.keySet().stream()
-			.filter(map -> map.getScope() == this)
+			.filter(map -> map.getScope() != this)
 			.collect(Collectors.toMap(p -> p, p -> registeredAddresses.get(p)));
 
 		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, filtered));
@@ -122,28 +120,27 @@ public class Portal extends MetaAgent {
 
 		children.add(node);
 		registeredAddresses.put(node, this);
-		updateChildrenWithAddressBook(node.getScope());
+		updateChildrenWithAddressBook();
 		if (!scopedHere(node.getScope())) {
 			updateParentWithAddressBook();
 		}
 	}
 
+	//True is the scope of the metaAgent is this node
 	private boolean scopedHere(MetaAgent scope) {
 		return scope == this;
 	}
 
+	//Updates the address book by first checking if there are any changes (returns if this is the case)
+	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 		HashMap<MetaAgent, MetaAgent> passedIn = (HashMap< MetaAgent, MetaAgent>) message.retrieveMessageItem();
 		if (passedIn.equals(registeredAddresses)) {
 			return;
 		}
-
 		registeredAddresses.putAll(passedIn);
 		updateChildrenWithAddressBook();
 		updateParentWithAddressBook();
-		if (!scopedHere(message.getScope())) {
-			updateParentWithAddressBook();
-		}
 
 	}
 
@@ -174,7 +171,7 @@ public class Portal extends MetaAgent {
 		} else {
 			//need to amend to make bounded and also think about what happens if it is already contained in the map
 			lostMessages.put(message.getRecipient(), message);
-			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_FOUND_IN_LOST_PROPERTY, this, message.getSender(), null));
+			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_IN_LOST_PROPERTY, this, message.getSender(), null));
 		}
 
 	}
