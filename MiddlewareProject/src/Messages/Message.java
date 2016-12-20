@@ -38,13 +38,16 @@ public class Message <T>{
 
     //The type of message the object is
     MessageType typeOfMessage;
+
+    private MetaAgent messageScope;
     
-    public Message(MessageType type, MetaAgent sender, MetaAgent recipient, T messageObject){
+    public Message(MessageType type, MetaAgent sender, MetaAgent recipient, T messageObject, MetaAgent scope){
         this.sender = sender;
         this.recipient = recipient;
 	this.typeOfMessage = type;
 	this.messageObject = messageObject;
 	this.type = type;
+	this.messageScope = scope;
         date = Calendar.getInstance();
         
         /**
@@ -67,6 +70,10 @@ public class Message <T>{
     //Gets the message item
     public T retrieveMessageItem(){
 	    return messageObject;
+    }
+
+    public MetaAgent getScope(){
+	    return messageScope;
     }
 
     public MessageType getMessageType(){
