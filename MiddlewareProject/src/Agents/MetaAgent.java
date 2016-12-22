@@ -5,13 +5,8 @@
  */
 package Agents;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Message;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import Messages.Message;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.management.monitor.Monitor;
 
 /**
  *
