@@ -21,12 +21,6 @@ import java.util.stream.Collectors;
  * @author chris
  */
 public class Portal extends MetaAgent {
-    
-        //constructor for portal, is this how the constructor should look?
-        public Portal(String name, MetaAgent parent) {
-            super(name);
-            this.parent = parent;
-        }
 
 	//The children of the node
 	private Set<MetaAgent> children = new HashSet<MetaAgent>();
@@ -35,14 +29,23 @@ public class Portal extends MetaAgent {
 	private MetaAgent parent = null;
 
 	//Should be maybe moved to the meta agent, this of course depending on what we do with the nodeMonitor
-	private HashMap<MetaAgent, MetaAgent> registeredAddresses = new HashMap<MetaAgent, MetaAgent>();
+	private HashMap<String, MetaAgent> registeredAddresses = new HashMap<String, MetaAgent>();
 
 	//Undelivered messages
-	private BoundedHashMap<MetaAgent, Message> lostMessages = new BoundedHashMap<MetaAgent, Message>(5);
+	private BoundedHashMap<String, Message> lostMessages = new BoundedHashMap<String, Message>(5);
+
+	//This should be in the meta object
+	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
+
 
 	//A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
 
+	//Constructor starts the thread
+	public Portal(String name) {
+		super(name);
+		thread.start();
+	}
 
 	//Adds a node to its children
 	private void addChild(MetaAgent child) {
@@ -71,7 +74,7 @@ public class Portal extends MetaAgent {
 
 	//Forwards a message on to the recepients 
 	private void sendMessage(Message message) {
-		MetaAgent recepient = message.getRecipient();
+		String recepient = message.getRecipient();
 		if (registeredAddresses.containsKey(recepient)) {
 			registeredAddresses.get(recepient).addToQueue(message);
 		} else {
@@ -90,32 +93,32 @@ public class Portal extends MetaAgent {
 	}
 
 	//If the passes meta agent is a reference to this object
-	private boolean isForMe(MetaAgent x) {
-		return x == this;
+	private boolean isForMe(String x) {
+		return x == this.toString();
 	}
 
 	//Runs through all the children and updates with current addressbook
 	private void updateChildrenWithAddressBook() {
 
 		for (MetaAgent x : children) {
-			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, x, registeredAddresses));
+			x.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this.toString(), x.toString(), registeredAddresses));
 		}
 	}
 
 	//Updates parent with address book, filters any node addresses whos scope is this node
 	private void updateParentWithAddressBook() {
-		Map<MetaAgent, MetaAgent> filtered = registeredAddresses.keySet().stream()
+		Map<String, MetaAgent> filtered = registeredAddresses.values().stream()
 			.filter(map -> map.getScope() != this)
-			.collect(Collectors.toMap(p -> p, p -> registeredAddresses.get(p)));
+			.collect(Collectors.toMap(p -> p.toString(), p -> registeredAddresses.get(p)));
 
-		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this, parent, filtered));
+		parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), filtered));
 	}
 
 	//Adds a node  to the portals children and updates the address
 	private void addNode(MetaAgent node) {
 
 		children.add(node);
-		registeredAddresses.put(node, this);
+		registeredAddresses.put(node.toString(), this);
 		updateChildrenWithAddressBook();
 		if (!scopedHere(node.getScope())) {
 			updateParentWithAddressBook();
@@ -130,7 +133,7 @@ public class Portal extends MetaAgent {
 	//Updates the address book by first checking if there are any changes (returns if this is the case)
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
-		HashMap<MetaAgent, MetaAgent> passedIn = (HashMap< MetaAgent, MetaAgent>) message.retrieveMessageItem();
+		HashMap<String, MetaAgent> passedIn = (HashMap< String, MetaAgent>) message.retrieveMessageItem();
 		if (passedIn.equals(registeredAddresses)) {
 			return;
 		}
@@ -167,9 +170,9 @@ public class Portal extends MetaAgent {
 		} else {
 			//Need to think about what happens if a message is already in lost messages to an agent, meaning we will have a duplication and overide
 			Message removed = lostMessages.putAndRetrieveLostValue(message.getRecipient(), message);
-			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_IN_LOST_PROPERTY, this, message.getSender(), null));
+			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_IN_LOST_PROPERTY, this.toString(), message.getSender(), null));
 			if(removed!= null){
-				registeredAddresses.get(removed.getSender()).addToQueue(new Message(MessageType.FAILED_TO_DELIVER, this, message.getSender(), removed));
+				registeredAddresses.get(removed.getSender()).addToQueue(new Message(MessageType.FAILED_TO_DELIVER, this.toString(), message.getSender(), removed));
 			}
 		}
 
