@@ -25,6 +25,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 	//This should be in the meta object
 	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
 
+	private MetaAgent scope;
+
 	//Should be in the meta
 	private Thread thread = new Thread();
 	
@@ -37,6 +39,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 	private void handle(Message message){
 		updateMonitors(message);		
 	}
+
+
+	public MetaAgent getScope(){
+		return scope;
+	}
+
 
 	@Override
 	public void run() {
