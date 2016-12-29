@@ -20,6 +20,7 @@ public class NodeMonitor extends MetaAgent{
 	@Override
 	void handle(Message message) {
 		System.out.println("I need finishing");
+		
 	}
 	
 }
