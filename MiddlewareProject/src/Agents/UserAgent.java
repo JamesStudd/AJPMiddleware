@@ -29,7 +29,7 @@ public class UserAgent extends MetaAgent {
 	
 	//Public enabling others to add messages to its queue
 	public void addToQueue(Message message){
-		queue.add(message);
+		this.addToQueue(message);
 	}      
         
         //public void sendMessage (Message message)();
