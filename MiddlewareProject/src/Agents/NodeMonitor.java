@@ -5,6 +5,8 @@
  */
 package Agents;
 
+import Messages.Message;
+
 /**
  *
  * @author chris
@@ -13,6 +15,11 @@ public class NodeMonitor extends MetaAgent{
 	
 	public NodeMonitor(String name) {
 		super(name);
+	}
+
+	@Override
+	void handle(Message message) {
+		System.out.println("I need finishing");
 	}
 	
 }
