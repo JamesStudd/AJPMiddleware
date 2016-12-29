@@ -27,30 +27,17 @@ public class UserAgent extends MetaAgent {
         
         private MetaAgent parent;
 	
-	//Public enabling others to add messages to its queue
-	public void addToQueue(Message message){
-		this.addToQueue(message);
-	}      
         
         //public void sendMessage (Message message)();
         //parent.addToQueue?
 
 	//Handles a message pull
-	private void handle(Message message){
-		updateMonitors(message);		
+	protected void handle(Message message){
+		System.out.println("I Need implementing");
 	}
         
         //A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
-
-	@Override
-	public void run() {
-
-		while(true){
-			handle(queue.remove());
-			
-		}
-	}
 
 
 }
