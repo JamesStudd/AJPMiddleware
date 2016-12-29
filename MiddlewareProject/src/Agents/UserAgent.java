@@ -33,7 +33,12 @@ public class UserAgent extends MetaAgent {
 
 	//Handles a message pull
 	protected void handle(Message message){
-		System.out.println("I Need implementing");
+
+		switch(message.getMessageType()){
+
+			case PASS_MESSAGE:
+				System.out.println(message.retrieveMessageItem());
+		}
 	}
         
         //A set of all the active monitors of the portal
