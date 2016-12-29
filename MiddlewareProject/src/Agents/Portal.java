@@ -73,8 +73,7 @@ public class Portal extends MetaAgent {
 	}
 
 	//Forwards a message on to the recepients 
-	private void sendMessage(Message message) {
-		String recepient = message.getRecipient();
+	private void sendMessage(Message message) { String recepient = message.getRecipient();
 		if (registeredAddresses.containsKey(recepient)) {
 			registeredAddresses.get(recepient).addToQueue(message);
 		} else {
@@ -86,11 +85,11 @@ public class Portal extends MetaAgent {
 	private void updateMonitors(Message message) {
 		Iterator<NodeMonitor> it = monitors.iterator();
 		while (it.hasNext()) {
-			it.next().addToQueue(Message message
-	);
+			it.next().addToQueue(message);
+	};
 		}
 
-	}
+	
 
 	//If the passes meta agent is a reference to this object
 	private boolean isForMe(String x) {
@@ -170,7 +169,7 @@ public class Portal extends MetaAgent {
 		} else {
 			//Need to think about what happens if a message is already in lost messages to an agent, meaning we will have a duplication and overide
 			Message removed = lostMessages.putAndRetrieveLostValue(message.getRecipient(), message);
-			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_IN_LOST_PROPERTY, this.toString(), message.getSender(), null));
+			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY, this.toString(), message.getSender(), null));
 			if(removed!= null){
 				registeredAddresses.get(removed.getSender()).addToQueue(new Message(MessageType.FAILED_TO_DELIVER, this.toString(), message.getSender(), removed));
 			}
