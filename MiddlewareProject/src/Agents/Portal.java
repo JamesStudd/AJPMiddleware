@@ -60,14 +60,6 @@ public class Portal extends MetaAgent {
 	}
 
 
-	//Forwards a message on to the recepients 
-	private void sendMessage(Message message) { String recepient = message.getRecipient();
-		if (registeredAddresses.containsKey(recepient)) {
-			registeredAddresses.get(recepient).addToQueue(message);
-		} else {
-
-		}
-	}
 
 	//Updates all current monitors with information about messages coming through
 	private void updateMonitors(Message message) {
