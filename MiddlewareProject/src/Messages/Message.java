@@ -70,10 +70,6 @@ public class Message <T>{
 	    return messageObject;
     }
 
-    public MetaAgent getScope(){
-	    return messageScope;
-    }
-
     public MessageType getMessageType(){
 	    return type;
     }
