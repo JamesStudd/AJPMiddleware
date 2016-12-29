@@ -44,7 +44,6 @@ public class Portal extends MetaAgent {
 	//Constructor starts the thread
 	public Portal(String name) {
 		super(name);
-		thread.start();
 	}
 
 	//Adds a node to its children
@@ -58,7 +57,7 @@ public class Portal extends MetaAgent {
 	}
 
 	//Adds a monitor to report to with messages
-	private void addMonitor(MetaAgent mon) {
+	private void addMonitor(NodeMonitor mon) {
 		monitors.add(mon);
 	}
 
@@ -187,10 +186,6 @@ public class Portal extends MetaAgent {
 		}
 	}
 
-	//Merge 2 portals together
-	private void mergePortal(MetaAgent portal) {
-		//something about merging portals here
-	}
 
 	@Override
 	public void run() {
