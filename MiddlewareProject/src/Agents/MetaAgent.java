@@ -51,6 +51,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 		return scope;
 	}
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 	@Override
 	public String toString() {

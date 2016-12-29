@@ -137,15 +137,15 @@ public class Portal extends MetaAgent {
 		switch (message.getMessageType()) {
 
 			case PASS_MESSAGE:
-				String theMessage = (String) message.retrieveMessageItem();
+				String theMessage = (String) message.retrieveMessageItem(); 
 				break;
-			case ADD_NODE:
+			case ADD_NODE: 
 				addNode((MetaAgent) message.retrieveMessageItem());
 				break;
-			case UPDATE_ADDRESSES:
+			case UPDATE_ADDRESSES: //not used in users
 				updateAddressBook(message);
 				break;
-			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
+			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: 
 				System.out.println("To do, should be an error");
 				break;
 			case ERROR:

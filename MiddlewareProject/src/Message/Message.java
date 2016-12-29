@@ -25,12 +25,12 @@ public class Message <T>{
     /**
      *Stores the name of the sender
      */
-    private MetaAgent sender;
+    private String sender;
     /**
      *Stores the previous portal that forwarded the message
      */
 
-    private MetaAgent recipient;
+    private String recipient;
     /**
      *Stores the date the message was sent
      */
@@ -39,7 +39,7 @@ public class Message <T>{
     //The type of message the object is
     MessageType typeOfMessage;
     
-    public Message(MessageType type, MetaAgent sender, MetaAgent recipient, T messageObject){
+    public Message(MessageType type, String sender, String recipient, T messageObject){
         this.sender = sender;
         this.recipient = recipient;
 	this.typeOfMessage = type;
@@ -73,12 +73,12 @@ public class Message <T>{
 	    return type;
     }
 
-    public MetaAgent getSender() {
+    public String getSender() {
         return sender;
     }
 
 
-    public MetaAgent getRecipient() {
+    public String getRecipient() {
         return recipient;
     }
 
