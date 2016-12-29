@@ -127,6 +127,7 @@ public class Portal extends MetaAgent {
 		registeredAddresses.putAll(passedIn);
 		updateChildrenWithAddressBook();
 		updateParentWithAddressBook();
+		System.out.println("need to add a method that checks if we can allocate any lost mail");
 
 	}
 
@@ -143,6 +144,15 @@ public class Portal extends MetaAgent {
 				break;
 			case UPDATE_ADDRESSES:
 				updateAddressBook(message);
+				break;
+			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
+				System.out.println("To do, should be an error");
+				break;
+			case ERROR:
+				System.out.println("To do, need to think about what errors we will find");
+
+			case FAILED_TO_DELIVER:
+				System.out.println("Shouldn't come here, need to do. Maybe create an error message");
 
 		}
 
