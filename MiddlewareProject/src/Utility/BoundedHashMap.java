@@ -47,6 +47,10 @@ public class BoundedHashMap <T, J> {
 		return map.get(key);
 	}
 
+	public boolean contains(T key){
+		return map.containsKey(key);
+	}
+
 	//Removes the key value pair at the passed key
 	public void remove(T key){
 		map.remove(key);

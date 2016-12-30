@@ -21,6 +21,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 	    objectThread.start();
 
         }
+
+	 //constructor for metaagents only takes in name atm, needs to have other things overloaded onto it from subclasses like scope, parent
+        public MetaAgent(String name, MetaAgent scope) {   
+            this.name = name;
+	    objectThread = new Thread(this);
+	    objectThread.start();
+	    this.scope = scope;
+
+        }
         
         //Name for user ease/debugging
         private String name;
@@ -35,11 +44,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 	
 	//Public enabling others to add messages to its queue
 	public void addToQueue(Message message){
-		System.out.println("\n\n\n");
-		System.out.println("adding to queue");
-		System.out.println(message.getMessageType());
-		System.out.println("from = " + message.getSender());
-		System.out.println("to = " + message.getRecipient());
 		queue.add(message);
 	}
 
@@ -51,9 +55,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 		return scope;
 	}
 
-    public String getName() {
-        return name;
-    }
+
+
 
     public void setName(String name) {
         this.name = name;

@@ -5,10 +5,32 @@
  */
 package Messages;
 
+import Agents.MetaAgent;
+import java.util.HashMap;
+
 /**
  *
  * @author chris
  */
 public enum MessageType {
 
-	PASS_MESSAGE, ADD_NODE, ERROR, UPDATE_ADDRESSES, ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY, FAILED_TO_DELIVER }
+	PASS_MESSAGE(String.class), 
+	ADD_NODE(MetaAgent.class), 
+	ERROR(String.class), 
+	UPDATE_ADDRESSES(HashMap.class), 
+	ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY(Message.class), 
+	FAILED_TO_DELIVER(Message.class), 
+	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class); 
+
+	Class requiredType;
+
+	private MessageType(Class t) {
+		requiredType = t;
+	}
+
+	public boolean checkType(Object o){
+		return o.getClass()== requiredType || o.getClass().getSuperclass() == requiredType;
+	}
+}
+
+	

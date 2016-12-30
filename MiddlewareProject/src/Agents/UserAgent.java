@@ -19,12 +19,17 @@ public class UserAgent extends MetaAgent {
     
         //constructor for UserAgent
         public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
-            super(name);
-            this.scope = scope;
+            super(name, scope);
             this.parent = parent;
+	    updateParentWithDetails();
         }
+
+	private void updateParentWithDetails(){
+		if(parent == null) return;
+		System.out.println("\n\n\nam updating  after being created " + this.toString());
+		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
+	}
     
-        private MetaAgent scope;
         
         private MetaAgent parent;
 	
@@ -42,14 +47,13 @@ public class UserAgent extends MetaAgent {
 
 			case PASS_MESSAGE:
 				String theMessage = (String) message.retrieveMessageItem(); //Is this when the user has recieved a message
+				System.out.println("This is the message " + theMessage);
 				break;
 			case ADD_NODE: //not used in users
 				System.out.println("Error, User Agents cannot have nodes created on them!"); 
-                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.getName(), message.getSender(), "Error, User Agents cannot have nodes created on them!"));
+                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.toString(),message.getSender(), "Error, User Agents cannot have nodes created on them!"));
 				break;
 			case UPDATE_ADDRESSES: //not used in users also needs to send an error msg back
-                                System.out.println("User Agents do not store addresses");
-				parent.addToQueue(new Message<String> (MessageType.ERROR, this.getName(), message.getSender(), "Error, User Agents do not store addresses!"));
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: //Is this going to go through the system and try to find a user or does it know straight away it doesn't exist
 				System.out.println("To do, should be an error");
@@ -59,7 +63,7 @@ public class UserAgent extends MetaAgent {
 
 			case FAILED_TO_DELIVER:
                             //How is this different to address not found or error messages?
-                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.getName(), message.getSender(), "Error or something"));
+                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.toString(),message.getSender(), "Error or something"));
 				System.out.println("Shouldn't come here, need to do. Maybe create an error message");
 		}
 	}
