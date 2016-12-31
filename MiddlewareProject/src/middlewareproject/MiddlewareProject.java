@@ -31,12 +31,14 @@ public class MiddlewareProject {
 
 		UserAgent agentThree = new UserAgent("Agent3", portalTwo, portalTwo);
 		UserAgent agentFour = new UserAgent("Agent4", portalTwo, null);
-		//portalOne.addToQueue(new Message<UserAgent>(MessageType.ADD_NODE, "root", portalOne.toString(), agentOne));
-		//portalOne.addToQueue(new Message<UserAgent>(MessageType.ADD_NODE, "root", portalOne.toString(), agentTwo));
+
 		portalOne.addToQueue(new Message<String>(MessageType.PASS_MESSAGE, agentOne.toString(), agentTwo.toString(), "I am the first message"));
 
 		Thread.sleep(5000);
+		System.out.println("Showing portal one");
 		portalOne.showAddresses();
+		System.out.println("\n");
+		portalTwo.showAddresses();
 	}
 
 }

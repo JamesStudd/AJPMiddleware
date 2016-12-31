@@ -8,14 +8,14 @@ package Agents;
 import Messages.Message;
 import Messages.MessageType;
 import Utility.BoundedHashMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -24,13 +24,13 @@ import java.util.stream.Stream;
 public class Portal extends MetaAgent {
 
 	//The children of the node
-	private HashMap<String, MetaAgent> children = new HashMap<String, MetaAgent>();
+	private Set<MetaAgent> children = new HashSet();
 
 	//The direct parent of the node
 	private MetaAgent parent = null;
 
 	//Should be maybe moved to the meta agent, this of course depending on what we do with the nodeMonitor
-	private HashMap<String, MetaAgent> registeredAddresses = new HashMap<String, MetaAgent>();
+	private ConcurrentHashMap<String, MetaAgent> registeredAddresses = new ConcurrentHashMap<String, MetaAgent>();
 
 	//Undelivered messages
 	private BoundedHashMap<String, Message> lostMessages = new BoundedHashMap<String, Message>(5);
@@ -79,10 +79,31 @@ public class Portal extends MetaAgent {
 
 	//Runs through all the children and updates with current addressbook
 	private void updateChildrenWithAddressBook() {
-		children.values().forEach(a -> {
+		children.forEach(a -> {
 				if(a.getClass() == this.getClass())	
-				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), registeredAddresses));
+				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), setChildrensAddressToMe(registeredAddresses)));
 			});
+	}
+
+	//This method sets all agents address that are set to be this nodes children to be set to this node
+	//This is for when we pass up the address book a parent so that they come to this node rather than straight to the child
+	private Map<String,MetaAgent> setChildrensAddressToMe(Map<String,MetaAgent> in){
+
+		Map<String, MetaAgent> out = new HashMap<>();
+		Iterator<String> keys = in.keySet().iterator();
+
+		while(keys.hasNext()){
+			String next = keys.next();
+			MetaAgent val = in.get(next);
+			if(children.contains(val)){
+				out.put(next, this);
+			}
+			else{
+				out.put(next, val);
+			}
+		}
+
+		return out;
 	}
 
 	//Updates parent with address book, filters any node addresses whos scope is this node
@@ -91,20 +112,19 @@ public class Portal extends MetaAgent {
 			return;
 		}
 
-		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), toBePassedUp));
+		Map<String, MetaAgent> addressBookToBePassed = setChildrensAddressToMe(toBePassedUp);
+
+		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), addressBookToBePassed));
 	}
 
 	//Adds a node  to the portals children and updates the address
 	private void addNode(MetaAgent node) {
 
-		children.put(node.toString(), node);
+		children.add(node);
 		registeredAddresses.put(node.toString(), node);
 		updateChildrenWithAddressBook();
 		if (!scopedHere(node.getScope())) {
 			updateParentWithAddressBook(getAddressesNotScopedHere());
-		}
-		else{
-
 		}
 	}
 
@@ -113,11 +133,10 @@ public class Portal extends MetaAgent {
 		return scope == this;
 	}
 
+	//Creates an address book where all nodes that are pointing to one of this nodes children now point to this node
 	private Map<String, MetaAgent> getAddressesNotScopedHere(){
 
 		Map<String, MetaAgent> toBePassedUp = new HashMap<>();
-
-		
 		Iterator<String> allFromMap = registeredAddresses.keySet().iterator();
 		while(allFromMap.hasNext()){
 			String next = allFromMap.next();
@@ -125,7 +144,6 @@ public class Portal extends MetaAgent {
 				toBePassedUp.put(next, registeredAddresses.get(next));
 			}
 		}
-
 		return  toBePassedUp;
 
 	}
@@ -133,26 +151,84 @@ public class Portal extends MetaAgent {
 	//Method used for dubugging
 	public void showAddresses(){
 		
-		System.out.println("Showing addresses");
+		System.out.println("Showing addresses for " + this.toString());
 		Iterator<String> t = registeredAddresses.keySet().iterator();
 		while(t.hasNext()){
 
-			System.out.println(t.next());
+			String next = t.next();
+			System.out.println(next + " : " + registeredAddresses.get(next));
+
+		}
+
+		System.out.println("Showing Children");
+
+		Iterator<MetaAgent> chil = children.iterator();
+		while(chil.hasNext()){
+			System.out.println(chil.next());
 		}
 	}
+
+	//This method removes all address that are not to be added because  they point to this node or they are children of this node
+	private HashMap<String, MetaAgent> removeAddressesThatPointToMeOrAreMyChildren(HashMap<String, MetaAgent> in , HashMap<String, MetaAgent> current){
+		Iterator<String> comingIn = in.keySet().iterator();
+		ArrayList<String> toBeRemoved  = new ArrayList();
+		MetaAgent inAgent;
+		MetaAgent currentAgent;
+		while(comingIn.hasNext()){
+			String next = comingIn.next();
+			if(current.containsKey(next)){
+				inAgent = in.get(next);
+				currentAgent = current.get(next);
+
+				if(inAgent == this || children.contains(registeredAddresses.get(next))){
+					toBeRemoved.add(next);
+				}
+				else{
+					continue;
+				}
+			}
+		}
+		toBeRemoved.forEach(a -> in.remove(a));
+		return in;
+	}
+
+	//Shows all the addresses and values of a passed node
+	private void showAddresses(Map<String, MetaAgent> in){
+		in.keySet().forEach((a) -> System.out.println(a + " : " + in.get(a).toString()));
+	}
+
+	//This method checks to see if anything is to be added to the registered addresses 
+	private boolean nothingDueToChange(Map<String, MetaAgent> in){
+		Iterator<String> i = in.keySet().iterator();
+		boolean change; 
+		while(i.hasNext()){
+			String next = i.next();
+			if(registeredAddresses.containsKey(next)){
+				if(!(registeredAddresses.get(next) == in.get(next))){
+					return false;
+				}
+			}
+			else return false;
+		}
+		return true;
+	}
+	
 	//Updates the address book by first checking if there are any changes (returns if this is the case)
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 
 		HashMap<String, MetaAgent> passedIn = (HashMap< String, MetaAgent>) message.retrieveMessageItem();
 		HashMap<String, MetaAgent> notScoped = (HashMap) getAddressesNotScopedHere();
+
+		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren(passedIn, notScoped);
 		
-		if (passedIn.equals(notScoped)) {
+		
+		if (nothingDueToChange(newAddressesThatNeedAdding)) {
 			return;
 		}
-		registeredAddresses.putAll(passedIn);
+		registeredAddresses.putAll(newAddressesThatNeedAdding);
 		updateChildrenWithAddressBook();
-		updateParentWithAddressBook(notScoped);
+		updateParentWithAddressBook(getAddressesNotScopedHere());
 		System.out.println("need to add a method that checks if we can allocate any lost mail");
 
 	}
@@ -192,11 +268,7 @@ public class Portal extends MetaAgent {
 	private void lookUpAndPassOn(Message message) {
 
 		if (registeredAddresses.containsKey(message.getRecipient())) {
-			if (children.containsKey(message.getRecipient())) {
-				children.get(message.getRecipient()).addToQueue(message);
-			} else {
 				registeredAddresses.get(message.getRecipient()).addToQueue(message);
-			}
 		} else {
 
 			Message removed;
