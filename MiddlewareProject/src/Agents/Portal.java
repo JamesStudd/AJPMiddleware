@@ -111,10 +111,7 @@ public class Portal extends MetaAgent {
 		if (parent == null || toBePassedUp == null) {
 			return;
 		}
-
-		Map<String, MetaAgent> addressBookToBePassed = setChildrensAddressToMe(toBePassedUp);
-
-		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), addressBookToBePassed));
+		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), toBePassedUp));
 	}
 
 	//Adds a node  to the portals children and updates the address
@@ -228,7 +225,7 @@ public class Portal extends MetaAgent {
 		}
 		registeredAddresses.putAll(newAddressesThatNeedAdding);
 		updateChildrenWithAddressBook();
-		updateParentWithAddressBook(getAddressesNotScopedHere());
+		updateParentWithAddressBook(setChildrensAddressToMe(getAddressesNotScopedHere()));
 		System.out.println("need to add a method that checks if we can allocate any lost mail");
 
 	}
