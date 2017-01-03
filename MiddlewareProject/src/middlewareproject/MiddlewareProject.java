@@ -5,12 +5,8 @@
  */
 package middlewareproject;
 
-import Agents.MetaAgent;
 import Agents.Portal;
 import Agents.UserAgent;
-import Messages.Message;
-import Messages.MessageType;
-import Messages.WrongObjectTypeForMessageException;
 
 /**
  *
@@ -27,6 +23,9 @@ public class MiddlewareProject {
 		Portal portalOne = new Portal("portal1");
 		Portal portalTwo = new Portal("portal2", portalOne);
 		Portal portalThree = new Portal("portal3", portalOne);
+		Portal portalFive = new Portal("portal5", null);
+		Portal portalFour = new Portal("portal4", portalFive);
+
 		UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
 		UserAgent agentTwo = new UserAgent("Agent2", portalOne, null);
 
@@ -35,7 +34,14 @@ public class MiddlewareProject {
 		UserAgent agentFive = new UserAgent("Agent5", portalThree, portalOne);
 		UserAgent agentSix = new UserAgent("Agent6", portalThree, null);
 
-		portalOne.addToQueue(new Message<String>(MessageType.PASS_MESSAGE, agentOne.toString(), agentTwo.toString(), "I am the first message"));
+		UserAgent agenta = new UserAgent("Agenta", portalFour, null);
+		UserAgent agentb = new UserAgent("Agentb", portalFour, portalFive);
+		UserAgent agentc = new UserAgent("Agentc", portalFour, portalFour);
+
+		
+		agentOne.passOverAMessage("Agent2", "first message");
+		agentc.passOverAMessage("Agenta", "2nd message");
+		agenta.passOverAMessage("agentOne", "this message should come through as lost");
 
 		Thread.sleep(5000);
 		System.out.println("Showing portal one");
@@ -44,6 +50,25 @@ public class MiddlewareProject {
 		portalTwo.showAddresses();
 		System.out.println("");
 		portalThree.showAddresses();
+		System.out.println("");
+		portalFour.showAddresses();
+		System.out.println("");
+		portalFive.showAddresses();
+
+
+		portalFive.setParent(portalOne);
+
+		Thread.sleep(5000);
+		System.out.println("Showing portal one");
+		portalOne.showAddresses();
+		System.out.println("\n");
+		portalTwo.showAddresses();
+		System.out.println("");
+		portalThree.showAddresses();
+		System.out.println("");
+		portalFour.showAddresses();
+		System.out.println("");
+		portalFive.showAddresses();
 	}
 
 }
