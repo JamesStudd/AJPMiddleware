@@ -290,7 +290,6 @@ public class Portal extends MetaAgent {
 				removed = lostMessages.get(message.getRecipient());
 
 			} else {
-
 				removed = lostMessages.putAndRetrieveLostValue(message.getRecipient(), message);
 
 			}

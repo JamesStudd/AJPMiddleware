@@ -18,7 +18,6 @@ public class MiddlewareProject {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		// TODO code application logic here
 
 		Portal portalOne = new Portal("portal1");
 		Portal portalTwo = new Portal("portal2", portalOne);
@@ -56,6 +55,7 @@ public class MiddlewareProject {
 		portalFive.showAddresses();
 
 
+		//Introducing portals 
 		portalFive.setParent(portalOne);
 
 		Thread.sleep(5000);
