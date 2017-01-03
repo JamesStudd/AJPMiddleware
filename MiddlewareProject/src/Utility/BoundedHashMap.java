@@ -44,7 +44,12 @@ public class BoundedHashMap <T, J> {
 
 	//Gets the value at the passed key
 	public J get(T key){
-		return map.get(key);
+		if(contains(key)){
+			J ret = map.get(key);
+			map.remove(key);
+			return ret;
+		}
+		return null;
 	}
 
 	public boolean contains(T key){

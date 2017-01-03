@@ -209,15 +209,24 @@ public class Portal extends MetaAgent {
 		}
 		return true;
 	}
+
+	private void checkForAnyLostMail(HashMap<String, MetaAgent> newAddresses){
+		Iterator<String> newAddressEntries = newAddresses.keySet().iterator();
+
+		while(newAddressEntries.hasNext()){
+			String  next = newAddressEntries.next();
+			if(lostMessages.contains(next)){
+				registeredAddresses.get(next).addToQueue(lostMessages.get(next));
+			}
+		}
+	}
 	
 	//Updates the address book by first checking if there are any changes (returns if this is the case)
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 
-		HashMap<String, MetaAgent> passedIn = (HashMap< String, MetaAgent>) message.retrieveMessageItem();
 		HashMap<String, MetaAgent> notScoped = (HashMap) getAddressesNotScopedHere();
-
-		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren(passedIn, notScoped);
+		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren((HashMap< String, MetaAgent>) message.retrieveMessageItem(), notScoped);
 		
 		
 		if (nothingDueToChange(newAddressesThatNeedAdding)) {
@@ -226,7 +235,7 @@ public class Portal extends MetaAgent {
 		registeredAddresses.putAll(newAddressesThatNeedAdding);
 		updateChildrenWithAddressBook();
 		updateParentWithAddressBook(setChildrensAddressToMe(getAddressesNotScopedHere()));
-		System.out.println("need to add a method that checks if we can allocate any lost mail");
+		checkForAnyLostMail(newAddressesThatNeedAdding);
 
 	}
 
