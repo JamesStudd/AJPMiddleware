@@ -32,6 +32,11 @@ public class UserAgent extends MetaAgent {
     
         
         private MetaAgent parent;
+
+	public void passOverAMessage(String to, String message){
+		System.out.println("message is being sent");
+		parent.addToQueue(new Message(MessageType.PASS_MESSAGE, this.toString(), to, message));
+	}
 	
         
         //public void sendMessage (Message message)();

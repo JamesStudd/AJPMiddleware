@@ -29,14 +29,11 @@ public class Portal extends MetaAgent {
 	//The direct parent of the node
 	private MetaAgent parent = null;
 
-	//Should be maybe moved to the meta agent, this of course depending on what we do with the nodeMonitor
+	//This is the map of all addresses registerd 
 	private ConcurrentHashMap<String, MetaAgent> registeredAddresses = new ConcurrentHashMap<String, MetaAgent>();
 
 	//Undelivered messages
 	private BoundedHashMap<String, Message> lostMessages = new BoundedHashMap<String, Message>(5);
-
-	//This should be in the meta object
-	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
 
 	//A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
@@ -44,15 +41,23 @@ public class Portal extends MetaAgent {
 	//Constructor starts the thread
 	public Portal(String name) {
 		super(name);
+		setParent(null);
 	}
 
+	//Constructor that takes a parent to the portal
 	public Portal(String name, MetaAgent parent){
 		super(name);
-		this.parent = parent;
+		setParent(parent);
 		
-		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
 	}
 
+	//Sets the parent and updates the parent with its address book
+	public void setParent(MetaAgent parent){
+		this.parent = parent;
+		if(parent!= null){
+			parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
+		}
+	}
 
 	//Adds a monitor to report to with messages
 	private void addMonitor(NodeMonitor mon) {
@@ -63,6 +68,7 @@ public class Portal extends MetaAgent {
 	private void removeMontior(MetaAgent mon) {
 		monitors.remove(mon);
 	}
+
 
 	//Updates all current monitors with information about messages coming through
 	private void updateMonitors(Message message) {
@@ -85,7 +91,7 @@ public class Portal extends MetaAgent {
 			});
 	}
 
-	//This method sets all agents address that are set to be this nodes children to be set to this node
+	//This method sets all agents address that are set to be this nodes children to instead be set to this node
 	//This is for when we pass up the address book a parent so that they come to this node rather than straight to the child
 	private Map<String,MetaAgent> setChildrensAddressToMe(Map<String,MetaAgent> in){
 
@@ -130,7 +136,8 @@ public class Portal extends MetaAgent {
 		return scope == this;
 	}
 
-	//Creates an address book where all nodes that are pointing to one of this nodes children now point to this node
+	//Creates a new map of addresses from the registered addresses removing those that are 
+	// scoped to this portal
 	private Map<String, MetaAgent> getAddressesNotScopedHere(){
 
 		Map<String, MetaAgent> toBePassedUp = new HashMap<>();
@@ -151,14 +158,10 @@ public class Portal extends MetaAgent {
 		System.out.println("Showing addresses for " + this.toString());
 		Iterator<String> t = registeredAddresses.keySet().iterator();
 		while(t.hasNext()){
-
 			String next = t.next();
 			System.out.println(next + " : " + registeredAddresses.get(next));
-
 		}
-
 		System.out.println("Showing Children");
-
 		Iterator<MetaAgent> chil = children.iterator();
 		while(chil.hasNext()){
 			System.out.println(chil.next());
@@ -176,7 +179,6 @@ public class Portal extends MetaAgent {
 			if(current.containsKey(next)){
 				inAgent = in.get(next);
 				currentAgent = current.get(next);
-
 				if(inAgent == this || children.contains(registeredAddresses.get(next))){
 					toBeRemoved.add(next);
 				}
@@ -189,7 +191,7 @@ public class Portal extends MetaAgent {
 		return in;
 	}
 
-	//Shows all the addresses and values of a passed node
+	//Shows all the addresses and values of a passed node - this method is used for debugging 
 	private void showAddresses(Map<String, MetaAgent> in){
 		in.keySet().forEach((a) -> System.out.println(a + " : " + in.get(a).toString()));
 	}
@@ -210,6 +212,10 @@ public class Portal extends MetaAgent {
 		return true;
 	}
 
+	/**
+	 * This methods checks the passed maps entries to see if we have any lost mail that needs to be handed over to the new agents
+	 * @param newAddresses 
+	 */
 	private void checkForAnyLostMail(HashMap<String, MetaAgent> newAddresses){
 		Iterator<String> newAddressEntries = newAddresses.keySet().iterator();
 
