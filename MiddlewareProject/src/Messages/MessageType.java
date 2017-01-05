@@ -30,7 +30,7 @@ public enum MessageType {
 
 	public boolean checkType(Object o){
 		return o.getClass()== requiredType || o.getClass().getSuperclass() == requiredType;
-	}
+	} 
 }
 
 	
