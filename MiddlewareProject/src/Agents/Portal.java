@@ -55,6 +55,7 @@ public class Portal extends MetaAgent {
 	public void setParent(MetaAgent parent){
 		this.parent = parent;
 		if(parent!= null){
+			registeredAddresses.put(parent.toString(), parent);
 			parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
 		}
 	}
