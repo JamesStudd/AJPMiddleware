@@ -59,13 +59,10 @@ public class PortalTests {
     public void isForMe() { 
         Portal testPortal1 = new Portal("testPortal");
         Portal testPortal2 = new Portal("testPorta2", testPortal1);
-        UserAgent P1Agent = new UserAgent("P1Agent", testPortal1, null);
-        UserAgent P2Agent = new UserAgent("P2Agent", testPortal2, null);
         
-        P2Agent.passOverAMessage("P1Agent", "Test Message");
-        
+        boolean actual = testPortal1.isForMe("testPortal1");
 
-        boolean actual = testPortal1.isForMe(message.getRecipient);
+
     }
     
     
