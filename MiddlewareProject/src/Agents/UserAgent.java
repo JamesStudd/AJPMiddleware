@@ -26,7 +26,7 @@ public class UserAgent extends MetaAgent {
 
 	private void updateParentWithDetails(){
 		if(parent == null) return;
-		System.out.println("\n\n\nam updating  after being created " + this.toString());
+		System.out.println(this.toString() + " has been created, alerting parent.");
 		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
 	}
     
