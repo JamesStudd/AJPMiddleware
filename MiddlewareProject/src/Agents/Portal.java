@@ -66,7 +66,7 @@ public class Portal extends MetaAgent {
 
 
 	//Adds a monitor to report to with messages
-	private void addMonitor(NodeMonitor mon) {
+	public void addMonitor(NodeMonitor mon) {
 		monitors.add(mon);
 	}
 
