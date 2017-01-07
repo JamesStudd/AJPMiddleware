@@ -49,30 +49,30 @@ public class MiddlewareProject {
             //STILL NEED TO SORT OUT WHO IS SCOPED TO WHERE
             //Populating Portals in Tree 1
             //T1P2
-            UserAgent T1P2One = new UserAgent("T1P2One", T1P2, null);
+            UserAgent T1P2One = new UserAgent("T1P2One", T1P2, T1P2);
             UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
             //T1P3
-            UserAgent T1P3One = new UserAgent("T1P3One", T1P3, null);
+            UserAgent T1P3One = new UserAgent("T1P3One", T1P3, T1P3);
             UserAgent T1P3Two = new UserAgent("T1P3Two", T1P3, null);
             //T1P4
-            UserAgent T1P4One = new UserAgent("T1P4One", T1P4, null);
-            UserAgent T1P4Two = new UserAgent("T1P4Two", T1P4, null);
-            UserAgent T1P4Three = new UserAgent("T1P4Three", T1P4, null);
+            UserAgent T1P4One = new UserAgent("T1P4One", T1P4, T1P4);
+            UserAgent T1P4Two = new UserAgent("T1P4Two", T1P4, T1P3);
+            UserAgent T1P4Three = new UserAgent("T1P4Three", T1P4, T1P2);
             UserAgent T1P4Four = new UserAgent("T1P4Four", T1P4, null);
             //T1P5
-            UserAgent T1P5One = new UserAgent("T1P5One", T1P5, null);
-            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, null);
-            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, null);
+            UserAgent T1P5One = new UserAgent("T1P5One", T1P5, T1P3);
+            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
+            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
             UserAgent T1P5Four = new UserAgent("T1P5Four", T1P5, null);
             //T1P6
-            UserAgent T1P6One = new UserAgent("T1P6One", T1P6, null);
-            UserAgent T1P6Two = new UserAgent("T1P6Two", T1P6, null);
-            UserAgent T1P6Three = new UserAgent("T1P6Three", T1P6, null);
+            UserAgent T1P6One = new UserAgent("T1P6One", T1P6, T1P6);
+            UserAgent T1P6Two = new UserAgent("T1P6Two", T1P6, T1P3);
+            UserAgent T1P6Three = new UserAgent("T1P6Three", T1P6, T1P2);
             UserAgent T1P6Four = new UserAgent("T1P6Four", T1P6, null);
             //T1P7
-            UserAgent T1P7One = new UserAgent("T1P7One", T1P7, null);
-            UserAgent T1P7Two = new UserAgent("T1P7Two", T1P7, null);
-            UserAgent T1P7Three = new UserAgent("T1P7Three", T1P7, null);
+            UserAgent T1P7One = new UserAgent("T1P7One", T1P7, T1P7);
+            UserAgent T1P7Two = new UserAgent("T1P7Two", T1P7, T1P3);
+            UserAgent T1P7Three = new UserAgent("T1P7Three", T1P7, T1P2);
             UserAgent T1P7Four = new UserAgent("T1P7Four", T1P7, null);
             
             System.out.println("\n\n");
