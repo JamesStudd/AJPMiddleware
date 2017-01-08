@@ -89,15 +89,31 @@ public class Portal extends MetaAgent {
 		return x == this.toString();
 	}
 
+	//Removes the child from the map passed in
 	private Map<String,MetaAgent> removeChild(Map<String, MetaAgent> m, MetaAgent child){
 		m.remove(child.toString());
+		return m;
+	}
+
+	//Sets the address pointer of all entries pointing to this portals parent to be pointing to this portal
+	private Map<String, MetaAgent> setParentsAddressToMe(Map<String,MetaAgent> m){
+		if(parent == null) return m;
+		Iterator<String> it = m.keySet().iterator();
+		while(it.hasNext()){
+			String next = it.next();
+			if(registeredAddresses.get(next) == parent){
+				m.put(next, this);
+			}
+		}
+		m.put(parent.toString(), this);
 		return m;
 	}
 	//Runs through all the children and updates with current addressbook
 	private void updateChildrenWithAddressBook() {
 		children.forEach(a -> {
 				if(a.getClass() == this.getClass())	
-				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), removeChild(setChildrensAddressToMe(registeredAddresses), a)));
+				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), 
+					removeChild(setParentsAddressToMe(setChildrensAddressToMe(registeredAddresses)), a)));
 			});
 	}
 
