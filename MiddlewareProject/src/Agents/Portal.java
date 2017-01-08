@@ -161,7 +161,7 @@ public class Portal extends MetaAgent {
 	//Method used for dubugging
 	public void showAddresses(){
 		
-		System.out.println("Showing addresses for " + this.toString());
+		System.out.println("Showing addresses for " + this.toString() + ":");
 		Iterator<String> t = registeredAddresses.keySet().iterator();
 		while(t.hasNext()){
 			String next = t.next();
