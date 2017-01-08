@@ -26,11 +26,12 @@ public class MiddlewareProject {
             //Head
             Portal HeadPortal = new Portal("HeadPortal");
             //Tier 2
-            Portal P2 = new Portal("P2", HeadPortal);
-            Portal P3 = new Portal("P3", HeadPortal);
+            Portal T1P2 = new Portal("T1P2", HeadPortal);
+            Portal T1P3 = new Portal("T1P3", HeadPortal);
 	    
             //Tier 3
-            Portal P4 = new Portal("P4", P2);
+            Portal T1P4 = new Portal("T1P4", T1P2);
+            Portal T1P5 = new Portal("T1P5", T1P3);
             //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
            // Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
            // Portal T1P7 = new Portal("Tree 1, Portal 7", T1P3);
@@ -52,46 +53,47 @@ public class MiddlewareProject {
             //Populating Portals in Tree 1
             //T1P2
 
-            UserAgent A1 = new UserAgent("A1", P4, P2);
-            UserAgent A2 = new UserAgent("A2", P4, null);
-            //T1P3
-            UserAgent A3 = new UserAgent("A3", P3, null);
-
-	    /*
-            //T1P4
-            UserAgent T1P4One = new UserAgent("T1P4One", T1P4, T1P4);
-            UserAgent T1P4Two = new UserAgent("T1P4Two", T1P4, T1P3);
-            UserAgent T1P4Three = new UserAgent("T1P4Three", T1P4, T1P2);
-            UserAgent T1P4Four = new UserAgent("T1P4Four", T1P4, null);
-            //T1P5
-            UserAgent T1P5One = new UserAgent("T1P5One", T1P5, T1P3);
-            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
-            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
-            UserAgent T1P5Four = new UserAgent("T1P5Four", T1P5, null);
-            //T1P6
-            UserAgent T1P6One = new UserAgent("T1P6One", T1P6, T1P6);
-            UserAgent T1P6Two = new UserAgent("T1P6Two", T1P6, T1P3);
-            UserAgent T1P6Three = new UserAgent("T1P6Three", T1P6, T1P2);
-            UserAgent T1P6Four = new UserAgent("T1P6Four", T1P6, null);
-            //T1P7
-            UserAgent T1P7One = new UserAgent("T1P7One", T1P7, T1P7);
-            UserAgent T1P7Two = new UserAgent("T1P7Two", T1P7, T1P3);
-            UserAgent T1P7Three = new UserAgent("T1P7Three", T1P7, T1P2);
-            UserAgent T1P7Four = new UserAgent("T1P7Four", T1P7, null);
-	   
+           UserAgent T1P2One = new UserAgent("T1P2One", T1P2, null);
+           UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
+//            //T1P3
+           UserAgent T1P3One = new UserAgent("T1P3One", T1P3, null);
+           UserAgent T1P3Two = new UserAgent("T1P3One", T1P3, T1P3);
+//
+//	    
+//            //T1P4
+           UserAgent T1P4One = new UserAgent("T1P4One", T1P4, null);
+//            UserAgent T1P4Two = new UserAgent("T1P4Two", T1P4, T1P3);
+//            UserAgent T1P4Three = new UserAgent("T1P4Three", T1P4, T1P2);
+//            UserAgent T1P4Four = new UserAgent("T1P4Four", T1P4, null);
+//            //T1P5
+           UserAgent T1P5One = new UserAgent("T1P5One", T1P5, null);
+//            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
+//            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
+//            UserAgent T1P5Four = new UserAgent("T1P5Four", T1P5, null);
+//            //T1P6
+//            UserAgent T1P6One = new UserAgent("T1P6One", T1P6, T1P6);
+//            UserAgent T1P6Two = new UserAgent("T1P6Two", T1P6, T1P3);
+//            UserAgent T1P6Three = new UserAgent("T1P6Three", T1P6, T1P2);
+//            UserAgent T1P6Four = new UserAgent("T1P6Four", T1P6, null);
+//            //T1P7
+//            UserAgent T1P7One = new UserAgent("T1P7One", T1P7, T1P7);
+//            UserAgent T1P7Two = new UserAgent("T1P7Two", T1P7, T1P3);
+//            UserAgent T1P7Three = new UserAgent("T1P7Three", T1P7, T1P2);
+//            UserAgent T1P7Four = new UserAgent("T1P7Four", T1P7, null);
+//	   
             System.out.println("\n\n");
-            
-	    */
-	    
-            Thread.sleep(5000);
+//            
+//	    
+//	    
+           Thread.sleep(5000);
                 System.out.println("Displaying Tree 1:");
                 HeadPortal.showAddresses();
 		System.out.println("");
-		P2.showAddresses();
+		T1P2.showAddresses();
 		System.out.println("");
-		P3.showAddresses();
+		T1P3.showAddresses();
 		System.out.println("");
-		P4.showAddresses();
+		T1P4.showAddresses();
 
                 System.out.println("\n");
 
@@ -101,11 +103,22 @@ public class MiddlewareProject {
                 
                 
                 System.out.println("\n\n\n\n");
-                
-            //T1P4One.passOverAMessage("T1P4Two", "Test message between shared portal");
-            //T1P4Four.passOverAMessage("T1P2One", "Test message sent one level up");
-            //T1P4Three.passOverAMessage("T1P5One", "Test message sent along a level");
-            //T1P6One.passOverAMessage("T2P5Five", "Error message, will not send until user is created.");
+//Literally have no idea where this getScope bug is coming from now
+//Also the thread in which the error happens seems to change between runs
+//                
+            T1P2One.passOverAMessage("T1P2Two", "Test message between shared portal");
+            T1P4One.passOverAMessage("T1P3One", "Test message sent one level up");
+            
+            T1P5One.passOverAMessage("T1P5Five", "Error message, will not send until user is created.");
+            T1P4One.passOverAMessage("T1P5One", "Test message sent along a level");
+           // T1P3Two.passOverAMessage("T1P2One", "Error message, should be outside of T1P3 scope");
+           
+           //Thread.sleep(5000);
+           
+           //UserAgent T1P5Five = new UserAgent("T1P5Five", T1P5, null);
+           
+           
+            
             
             
             
