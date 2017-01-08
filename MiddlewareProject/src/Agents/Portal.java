@@ -154,8 +154,11 @@ public class Portal extends MetaAgent {
 		Iterator<String> allFromMap = registeredAddresses.keySet().iterator();
 		while(allFromMap.hasNext()){
 			String next = allFromMap.next();
-			if(registeredAddresses.get(next).getScope() != this){
+			if(registeredAddresses.get(next).getScope(next) != this){
 				toBePassedUp.put(next, registeredAddresses.get(next));
+			}
+			else{
+				System.out.println( this.toString() +"found one scoped");
 			}
 		}
 		return  toBePassedUp;
@@ -239,21 +242,23 @@ public class Portal extends MetaAgent {
 			}
 		}
 	}
+
+	public MetaAgent getScope(String name){
+		if(name.equals(this.toString())){
+			return this.getScope();
+		}
+		else{
+			return registeredAddresses.get(name).getScope(name);
+		}
+	}
 	
 	//Updates the address book by first checking if there are any changes (returns if this is the case)
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 
-		System.out.println("I am updating my address book");
-		System.out.println("The addresses pushed in ");
-		showAddresses((HashMap<String,MetaAgent>) message.retrieveMessageItem());
 
-		System.out.println("These are my current addresses ");
-		showAddresses();
 		HashMap<String, MetaAgent> notScoped = (HashMap) getAddressesNotScopedHere();
 		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren((HashMap< String, MetaAgent>) message.retrieveMessageItem(), notScoped);
-		System.out.println("These are the addresses that need adding");
-		showAddresses(newAddressesThatNeedAdding);
 		
 		
 		if (nothingDueToChange(newAddressesThatNeedAdding)) {
@@ -301,9 +306,6 @@ public class Portal extends MetaAgent {
 	private void lookUpAndPassOn(Message message) {
 
 		if (registeredAddresses.containsKey(message.getRecipient())) {
-				System.out.println("We have the recipient in our list");
-				showAddresses();
-				System.out.println("This is the person we are forwarding the message to " + registeredAddresses.get(message.getRecipient()));
 				registeredAddresses.get(message.getRecipient()).addToQueue(message);
 		} else {
 
@@ -328,16 +330,10 @@ public class Portal extends MetaAgent {
 	//Handles a message pull
 	@Override
 	protected void handle(Message message) {
-		System.out.println("The person with the message " + this.toString());
-		System.out.println("I am the person the message is for " + message.getRecipient());
-		System.out.println("I am the person the message is from  " + message.getSender());
-		System.out.println("I am the message type " + message.getMessageType());
 		updateMonitors(message);
 		if (isForMe(message.getRecipient())) {
-			System.out.println("This message is for me");
 			extractMessageDetailsAndHandle(message);
 		} else {
-			System.out.println("This message is not for me");
 			lookUpAndPassOn(message);
 		}
 	}
