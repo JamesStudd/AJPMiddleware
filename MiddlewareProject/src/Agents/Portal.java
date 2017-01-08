@@ -286,6 +286,9 @@ public class Portal extends MetaAgent {
 	private void lookUpAndPassOn(Message message) {
 
 		if (registeredAddresses.containsKey(message.getRecipient())) {
+				System.out.println("We have the recipient in our list");
+				showAddresses();
+				System.out.println("This is the person we are forwarding the message to " + registeredAddresses.get(message.getRecipient()));
 				registeredAddresses.get(message.getRecipient()).addToQueue(message);
 		} else {
 
@@ -310,10 +313,15 @@ public class Portal extends MetaAgent {
 	//Handles a message pull
 	@Override
 	protected void handle(Message message) {
+		System.out.println("The person with the message " + this.toString());
+		System.out.println("I am the person the message is for " + message.getRecipient());
+		System.out.println("I am the person the message is from  " + message.getSender());
 		updateMonitors(message);
 		if (isForMe(message.getRecipient())) {
+			System.out.println("This message is for me");
 			extractMessageDetailsAndHandle(message);
 		} else {
+			System.out.println("This message is not for me");
 			lookUpAndPassOn(message);
 		}
 	}
