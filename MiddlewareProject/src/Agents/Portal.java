@@ -89,11 +89,15 @@ public class Portal extends MetaAgent {
 		return x == this.toString();
 	}
 
+	private Map<String,MetaAgent> removeChild(Map<String, MetaAgent> m, MetaAgent child){
+		m.remove(child.toString());
+		return m;
+	}
 	//Runs through all the children and updates with current addressbook
 	private void updateChildrenWithAddressBook() {
 		children.forEach(a -> {
 				if(a.getClass() == this.getClass())	
-				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), setChildrensAddressToMe(registeredAddresses)));
+				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), removeChild(setChildrensAddressToMe(registeredAddresses), a)));
 			});
 	}
 
@@ -133,7 +137,7 @@ public class Portal extends MetaAgent {
 		registeredAddresses.put(node.toString(), node);
 		updateChildrenWithAddressBook();
 		if (!scopedHere(node.getScope())) {
-			updateParentWithAddressBook(getAddressesNotScopedHere());
+			updateParentWithAddressBook(setChildrensAddressToMe(getAddressesNotScopedHere()));
 		}
 	}
 
@@ -185,6 +189,9 @@ public class Portal extends MetaAgent {
 			if(current.containsKey(next)){
 				inAgent = in.get(next);
 				currentAgent = current.get(next);
+				if(next.equals(this.toString())){
+					toBeRemoved.add(next);
+				}
 				if(inAgent == this || children.contains(registeredAddresses.get(next))){
 					toBeRemoved.add(next);
 				}
@@ -237,8 +244,16 @@ public class Portal extends MetaAgent {
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 
+		System.out.println("I am updating my address book");
+		System.out.println("The addresses pushed in ");
+		showAddresses((HashMap<String,MetaAgent>) message.retrieveMessageItem());
+
+		System.out.println("These are my current addresses ");
+		showAddresses();
 		HashMap<String, MetaAgent> notScoped = (HashMap) getAddressesNotScopedHere();
 		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren((HashMap< String, MetaAgent>) message.retrieveMessageItem(), notScoped);
+		System.out.println("These are the addresses that need adding");
+		showAddresses(newAddressesThatNeedAdding);
 		
 		
 		if (nothingDueToChange(newAddressesThatNeedAdding)) {
@@ -316,6 +331,7 @@ public class Portal extends MetaAgent {
 		System.out.println("The person with the message " + this.toString());
 		System.out.println("I am the person the message is for " + message.getRecipient());
 		System.out.println("I am the person the message is from  " + message.getSender());
+		System.out.println("I am the message type " + message.getMessageType());
 		updateMonitors(message);
 		if (isForMe(message.getRecipient())) {
 			System.out.println("This message is for me");

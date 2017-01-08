@@ -24,16 +24,18 @@ public class MiddlewareProject {
             
             //Constructing first tree:
             //Head
-            Portal T1P1 = new Portal("Tree 1, Portal 1");
+            Portal HeadPortal = new Portal("HeadPortal");
             //Tier 2
-            Portal T1P2 = new Portal("Tree 1, Portal 2", T1P1);
-            Portal T1P3 = new Portal("Tree 1, Portal 3", T1P1);
+            Portal P2 = new Portal("P2", HeadPortal);
+            Portal P3 = new Portal("P3", HeadPortal);
+	    
             //Tier 3
-            Portal T1P4 = new Portal("Tree 1, Portal 4", T1P2);
-            Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
-            Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
-            Portal T1P7 = new Portal("Tree 1, Portal 7", T1P3);
-            
+            Portal P4 = new Portal("P4", P2);
+            //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
+           // Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
+           // Portal T1P7 = new Portal("Tree 1, Portal 7", T1P3);
+           
+	    /**
             //Constructing second tree:
             //Head
             Portal T2P1 = new Portal("Tree 2, Portal 1");
@@ -45,15 +47,17 @@ public class MiddlewareProject {
             Portal T2P5 = new Portal("Tree 2, Portal 5", T2P2);
             Portal T2P6 = new Portal("Tree 2, Portal 6", T2P3);
             Portal T2P7 = new Portal("Tree 2, Portal 7", T2P3);
-               
+              */ 
             //STILL NEED TO SORT OUT WHO IS SCOPED TO WHERE
             //Populating Portals in Tree 1
             //T1P2
-            UserAgent T1P2One = new UserAgent("T1P2One", T1P2, T1P2);
-            UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
+
+            UserAgent A1 = new UserAgent("A1", P4, P2);
+            UserAgent A2 = new UserAgent("A2", P4, null);
             //T1P3
-            UserAgent T1P3One = new UserAgent("T1P3One", T1P3, T1P3);
-            UserAgent T1P3Two = new UserAgent("T1P3Two", T1P3, null);
+            UserAgent A3 = new UserAgent("A3", P3, null);
+
+	    /*
             //T1P4
             UserAgent T1P4One = new UserAgent("T1P4One", T1P4, T1P4);
             UserAgent T1P4Two = new UserAgent("T1P4Two", T1P4, T1P3);
@@ -74,57 +78,34 @@ public class MiddlewareProject {
             UserAgent T1P7Two = new UserAgent("T1P7Two", T1P7, T1P3);
             UserAgent T1P7Three = new UserAgent("T1P7Three", T1P7, T1P2);
             UserAgent T1P7Four = new UserAgent("T1P7Four", T1P7, null);
-            
+	   
             System.out.println("\n\n");
             
+	    */
+	    
             Thread.sleep(5000);
                 System.out.println("Displaying Tree 1:");
-                T1P1.showAddresses();
+                HeadPortal.showAddresses();
+		System.out.println("");
+		P2.showAddresses();
+		System.out.println("");
+		P3.showAddresses();
+		System.out.println("");
+		P4.showAddresses();
+
                 System.out.println("\n");
-		T1P2.showAddresses();
-		System.out.println("\n");
-		T1P3.showAddresses();
-		System.out.println("");
-		T1P4.showAddresses();
-		System.out.println("");
-		T1P5.showAddresses();
-		System.out.println("");
-		T1P6.showAddresses();
-                System.out.println("");
-		T1P7.showAddresses();
-                System.out.println("\n\n\n\n");
-                
+
                 Thread.sleep(5000);
 
                 
-                System.out.println("Displaying Tree 2:");
-                T2P1.showAddresses();
-                System.out.println("\n");
-		T2P2.showAddresses();
-		System.out.println("\n");
-		T2P3.showAddresses();
-		System.out.println("");
-		T2P4.showAddresses();
-		System.out.println("");
-		T2P5.showAddresses();
-		System.out.println("");
-		T2P6.showAddresses();
-                System.out.println("");
-		T2P7.showAddresses();
                 
                 System.out.println("\n\n\n\n");
                 
-            T1P4One.passOverAMessage("T1P4Two", "Test message between shared portal");
-            T1P4Four.passOverAMessage("T1P2One", "Test message sent one level up");
-            T1P4Three.passOverAMessage("T1P5One", "Test message sent along a level");
-            T1P6One.passOverAMessage("T2P5Five", "Error message, will not send until user is created.");
+            //T1P4One.passOverAMessage("T1P4Two", "Test message between shared portal");
+            //T1P4Four.passOverAMessage("T1P2One", "Test message sent one level up");
+            //T1P4Three.passOverAMessage("T1P5One", "Test message sent along a level");
+            //T1P6One.passOverAMessage("T2P5Five", "Error message, will not send until user is created.");
             
-            
-            
-            
-            
-            
-
             
             
             
