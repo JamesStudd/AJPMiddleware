@@ -77,6 +77,7 @@ public class MiddlewareProject {
             
             System.out.println("\n\n");
             
+            Thread.sleep(5000);
                 System.out.println("Displaying Tree 1:");
                 T1P1.showAddresses();
                 System.out.println("\n");
@@ -92,6 +93,8 @@ public class MiddlewareProject {
                 System.out.println("");
 		T1P7.showAddresses();
                 System.out.println("\n\n\n\n");
+                
+                Thread.sleep(5000);
 
                 
                 System.out.println("Displaying Tree 2:");
@@ -108,6 +111,14 @@ public class MiddlewareProject {
 		T2P6.showAddresses();
                 System.out.println("");
 		T2P7.showAddresses();
+                
+                System.out.println("\n\n\n\n");
+                
+            T1P4One.passOverAMessage("T1P4Two", "Test message between shared portal");
+            T1P4Four.passOverAMessage("T1P2One", "Test message sent one level up");
+            T1P4Three.passOverAMessage("T1P5One", "Test message sent along a level");
+            T1P6One.passOverAMessage("T2P5Five", "Error message, will not send until user is created.");
+            
             
             
             
@@ -121,7 +132,7 @@ public class MiddlewareProject {
             
             
             
-            //Chris' example
+//            //Chris' example
 //		Portal portalOne = new Portal("Portal 1");
 //		Portal portalTwo = new Portal("portal2", portalOne);
 //		Portal portalThree = new Portal("portal3", portalOne);

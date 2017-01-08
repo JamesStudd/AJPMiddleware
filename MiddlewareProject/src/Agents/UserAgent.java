@@ -52,7 +52,7 @@ public class UserAgent extends MetaAgent {
 
 			case PASS_MESSAGE:
 				String theMessage = (String) message.retrieveMessageItem(); //Is this when the user has recieved a message
-				System.out.println("This is the message " + theMessage);
+				System.out.println("Message: " + theMessage);
 				break;
 			case ADD_NODE: //not used in users
 				System.out.println("Error, User Agents cannot have nodes created on them!"); 
