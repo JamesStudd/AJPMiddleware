@@ -55,6 +55,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 		return scope;
 	}
 
+	public MetaAgent getScope(String name){
+		return scope;
+	}
 
 
 
