@@ -61,7 +61,6 @@ public class MiddlewareProject {
            UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
 //            //T1P3
            UserAgent T1P3One = new UserAgent("T1P3One", T1P3, null);
-           UserAgent T1P3Two = new UserAgent("T1P3Two", T1P3, T1P3);
            
 //
 //	    
@@ -101,28 +100,28 @@ public class MiddlewareProject {
 		T1P4.showAddresses();
                 System.out.println("");
 		T1P5.showAddresses();
-
-                System.out.println("\n");
-
-
-                Thread.sleep(5000);
-
-                T1P3.showAddresses();
-                
-                
-                System.out.println("\n\n\n\n");
+//
+//                System.out.println("\n");
+//
+//
+//                Thread.sleep(5000);
+//
+//                T1P3.showAddresses();
+//                
+//                
+//                System.out.println("\n\n\n\n");
 //Literally have no idea where this getScope bug is coming from now
 //Also the thread in which the error happens seems to change between runs
 //                
-            T1P2One.passOverAMessage("T1P2Two", "Test message between shared portal 1");
-            T1P4One.passOverAMessage("T1P3One", "Test message sent one level up 2");
-            T1P4One.passOverAMessage("T1P5One", "Test message sent along a level 3");
-            T1P5One.passOverAMessage("T1P5Five", "Error message, will not send until user is created. 4");
-            T1P3Two.passOverAMessage("T1P2One", "Error message, should be outside of T1P3 scope 5");
-           
-           Thread.sleep(5000);
-           
-           UserAgent T1P5Five = new UserAgent("T1P5Five", T1P5, null);
+//            T1P2One.passOverAMessage("T1P2Two", "Test message between shared portal 1");
+//            T1P4One.passOverAMessage("T1P3One", "Test message sent one level up 2");
+//            T1P4One.passOverAMessage("T1P5One", "Test message sent along a level 3");
+//            T1P5One.passOverAMessage("T1P5Five", "Error message, will not send until user is created. 4");
+//            T1P3Two.passOverAMessage("T1P2One", "Error message, should be outside of T1P3 scope 5");
+//           
+//           Thread.sleep(5000);
+//           
+//           UserAgent T1P5Five = new UserAgent("T1P5Five", T1P5, null);
            
            
             
