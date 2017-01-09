@@ -60,7 +60,7 @@ public class PortalTests {
         Portal testPortal1 = new Portal("testPortal");
         Portal testPortal2 = new Portal("testPorta2", testPortal1);
         
-        boolean actual = testPortal1.isForMe("testPortal1");
+        //boolean actual = testPortal1.isForMe("testPortal1");
 
 
     }

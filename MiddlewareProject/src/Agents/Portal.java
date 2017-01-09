@@ -84,6 +84,10 @@ public class Portal extends MetaAgent {
 		};
 	}
 
+    public ConcurrentHashMap<String, MetaAgent> getRegisteredAddresses() {
+        return registeredAddresses;
+    }
+
 	//If the passes meta agent is a reference to this object
 	private boolean isForMe(String x) {
 		return x == this.toString();
