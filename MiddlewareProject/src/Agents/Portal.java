@@ -113,7 +113,7 @@ public class Portal extends MetaAgent {
 		children.forEach(a -> {
 				if(a.getClass() == this.getClass())	
 				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(), 
-					removeChild(setParentsAddressToMe(setChildrensAddressToMe(registeredAddresses)), a)));
+					removeChild(setParentsAddressToMe(setChildrensAddressToMe(getAddressesNotScopedHere())), a)));
 			});
 	}
 
@@ -155,6 +155,12 @@ public class Portal extends MetaAgent {
 		if (!scopedHere(node.getScope())) {
 			updateParentWithAddressBook(setChildrensAddressToMe(getAddressesNotScopedHere()));
 		}
+
+                if(lostMessages.contains(node.toString())){
+                   node.addToQueue(lostMessages.get(node.toString()));
+                    
+                }
+             
 	}
 
 	//True is the scope of the metaAgent is this node
@@ -173,9 +179,7 @@ public class Portal extends MetaAgent {
 			if(registeredAddresses.get(next).getScope(next) != this){
 				toBePassedUp.put(next, registeredAddresses.get(next));
 			}
-			else{
-				System.out.println( this.toString() +"found one scoped");
-			}
+			
 		}
 		return  toBePassedUp;
 
@@ -263,6 +267,7 @@ public class Portal extends MetaAgent {
 		if(name.equals(this.toString())){
 			return this.getScope();
 		}
+               
 		else{
 			return registeredAddresses.get(name).getScope(name);
 		}
@@ -271,8 +276,7 @@ public class Portal extends MetaAgent {
 	//Updates the address book by first checking if there are any changes (returns if this is the case)
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
-
-
+              
 		HashMap<String, MetaAgent> notScoped = (HashMap) getAddressesNotScopedHere();
 		HashMap<String, MetaAgent> newAddressesThatNeedAdding = removeAddressesThatPointToMeOrAreMyChildren((HashMap< String, MetaAgent>) message.retrieveMessageItem(), notScoped);
 		
@@ -284,6 +288,9 @@ public class Portal extends MetaAgent {
 		updateChildrenWithAddressBook();
 		updateParentWithAddressBook(setChildrensAddressToMe(getAddressesNotScopedHere()));
 		checkForAnyLostMail(newAddressesThatNeedAdding);
+           
+              
+                
 
 	}
 
