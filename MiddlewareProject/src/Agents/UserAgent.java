@@ -15,70 +15,65 @@ import java.util.Set;
  * @author Sean
  */
 public class UserAgent extends MetaAgent {
-        
-    
-        //constructor for UserAgent
-        public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
-            super(name, scope);
-            this.parent = parent;
-	    updateParentWithDetails();
-        }
 
-	private void updateParentWithDetails(){
-		if(parent == null) return;
+	//constructor for UserAgent
+	public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
+		super(name, scope);
+		this.parent = parent;
+		updateParentWithDetails();
+	}
+
+	private void updateParentWithDetails() {
+		if (parent == null) {
+			return;
+		}
 		System.out.println(this.toString() + " has been created, alerting parent.");
 		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
 	}
-    
-        
-        private MetaAgent parent;
 
-	public void passOverAMessage(String to, String message){
+
+	private MetaAgent parent;
+
+	public void passOverAMessage(String to, String message) {
 		System.out.println("message is being sent");
 		parent.addToQueue(new Message(MessageType.PASS_MESSAGE, this.toString(), to, message));
 	}
-	
-        
-        //public void sendMessage (Message message)();
-        //parent.addToQueue?
 
+	//public void sendMessage (Message message)();
+	//parent.addToQueue?
 	//Handles a message pull
-	protected void handle(Message message){
+	protected void handle(Message message) {
 
 		switch (message.getMessageType()) {
-                    //Cases that cannot happen need to return a message of type error onto the senders queue
-                    //Only really handle pass message, failed to deliver and address not found
-                    //update addresses should be a return it only sends msgs to its parent
+			//Cases that cannot happen need to return a message of type error onto the senders queue
+			//Only really handle pass message, failed to deliver and address not found
+			//update addresses should be a return it only sends msgs to its parent
 
 			case PASS_MESSAGE:
 				String theMessage = (String) message.retrieveMessageItem(); //Is this when the user has recieved a message
 				System.out.println(this.toString() + " Recieved message: " + theMessage);
 				break;
 			case ADD_NODE: //not used in users
-				System.out.println("Error, User Agents cannot have nodes created on them!"); 
-                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.toString(),message.getSender(), "Error, User Agents cannot have nodes created on them!"));
+				System.out.println("Error, User Agents cannot have nodes created on them!");
+				parent.addToQueue(new Message<String>(MessageType.ERROR, this.toString(), message.getSender(), "Error, User Agents cannot have nodes created on them!"));
 				break;
-			case UPDATE_ADDRESSES: 
+			case UPDATE_ADDRESSES:
 				break;
-			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: 
+			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
 				System.out.println("Address not found, current held in lost property");
 				break;
 			case ERROR:
 				System.out.println("Error " + (String) message.retrieveMessageItem());
-
+				break;
 			case FAILED_TO_DELIVER:
-                            //How is this different to address not found or error messages?
-                                parent.addToQueue(new Message<String> (MessageType.ERROR, this.toString(),message.getSender(), "Error or something"));
+				//How is this different to address not found or error messages?
+				parent.addToQueue(new Message<String>(MessageType.ERROR, this.toString(), message.getSender(), "Error or something"));
 				System.out.println("Shouldn't come here, need to do. Maybe create an error message");
+				break;
 		}
 	}
-        
-        //A set of all the active monitors of the portal
+
+	//A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
 
-
 }
-
-    
-
-    
