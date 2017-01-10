@@ -47,25 +47,12 @@ public class NodeMonitor extends MetaAgent {
 
 	   Message lastMessage = nodesList.get(nodesList.size()-1);
 
-	    handle(lastMessage);
-	    }
-    }
+	     updateAndShowMessage(lastMessage, false);
+    }}
 
-    @Override
-    void handle(Message message) {
-
-	
-	String obj = "";
-	String type = "";
-	String date = message.getDate().toString();
-	String sender = "";
-	String recip = "";
-
-	if(watching.containsKey(message.getRecipient())){
-		watching.get(message.getRecipient()).add(message);
-	}
-
-        switch (message.getMessageType()) {
+    private void updateAndShowMessage(Message message, boolean newMessage){
+	    String obj, type, sender, recip, date;
+	     switch (message.getMessageType()) {
             case PASS_MESSAGE:
                 obj = (String) message.retrieveMessageItem();
                 type = "String";
@@ -120,10 +107,26 @@ public class NodeMonitor extends MetaAgent {
         recip = message.getRecipient();
         date = message.dateString();
 
+	if(newMessage){
+		nodeHistoy.put(recip, formatHistory(obj, type, date, sender, recip, nodeHistoy.get(recip)));
+
+	}
 	
-	nodeHistoy.put(recip, formatHistory(obj, type, date, sender, recip, nodeHistoy.get(recip)));
 
         mb.receivedNewMessage(obj, type, date, sender, recip, nodeHistoy.get(recip));
+    }
+    
+    @Override
+    void handle(Message message) {
+
+	
+
+	if(watching.containsKey(message.getRecipient())){
+		watching.get(message.getRecipient()).add(message);
+	}
+	    updateAndShowMessage(message, true);
+
+       
     }
 
 
