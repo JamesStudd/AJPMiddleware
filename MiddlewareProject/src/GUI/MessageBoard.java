@@ -238,17 +238,6 @@ public class MessageBoard extends javax.swing.JFrame {
 	    	nodesMonitoring.addItem(recip.trim());
 	    }
 	    nodesMonitoring.setSelectedItem(recip);
-        if(messagesReceived > 0){
-            prevMessageArea.append(
-                messagesReceived + ". \n"+
-                "Sender: " + senderTextField.getText() + "\n"+
-                "Receiver: " + recipTextField.getText() + "\n"+
-                "Date: " + dateTextField.getText() + "\n"+
-                "Message Type: " + typeTextField.getText() + "\n"+
-                "Message: " + objectTextArea.getText() + "\n"+
-                "--------------------\n"
-            );
-        }
 	prevMessageArea.setText(history);
         objectTextArea.setText(obj);
         typeTextField.setText(type);

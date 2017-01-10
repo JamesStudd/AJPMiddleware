@@ -42,9 +42,7 @@ public class NodeMonitor extends MetaAgent {
     
     public void changeNodeTo(String node){
 
-	    System.out.println("in here " + node);
 	    ArrayList<Message> nodesList = watching.get(node);
-	    System.out.println(nodesList);
 	    if(nodesList != null && !nodesList.isEmpty()){
 
 	   Message lastMessage = nodesList.get(nodesList.size()-1);
