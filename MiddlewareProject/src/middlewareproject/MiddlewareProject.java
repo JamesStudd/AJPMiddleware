@@ -38,6 +38,8 @@ public class MiddlewareProject {
             //Tier 3
             Portal T1P4 = new Portal("T1P4", T1P2);
             Portal T1P5 = new Portal("T1P5", T1P3);
+	    Portal P6 = new Portal("6", null);
+	    Portal p7 = new Portal("7", P6);
             NodeMonitor nm = new NodeMonitor("NM1");
             T1P5.addMonitor(nm);
             //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
@@ -74,8 +76,10 @@ public class MiddlewareProject {
 //            UserAgent T1P4Three = new UserAgent("T1P4Three", T1P4, T1P2);
 //            UserAgent T1P4Four = new UserAgent("T1P4Four", T1P4, null);
 //            //T1P5
-           UserAgent T1P5One = new UserAgent("T1P5One", T1P5, null);
+           UserAgent T1P5One = new UserAgent("T1P5One", T1P5, T1P5);
            
+	   UserAgent a = new UserAgent("a", p7, T1P3);
+	   UserAgent b = new UserAgent("b", p7, null);
            
 //            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
 //            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
@@ -104,7 +108,31 @@ public class MiddlewareProject {
 		T1P4.showAddresses();
                 System.out.println("");
 		T1P5.showAddresses();
-//
+		System.out.println("");
+		p7.showAddresses();
+		System.out.println("");
+		P6.showAddresses();
+
+
+		P6.setParent(T1P5);
+
+	Thread.sleep(1000);
+
+ 		System.out.println("Displaying Tree 1: take 2");
+                HeadPortal.showAddresses();
+		System.out.println("");
+		T1P2.showAddresses();
+		System.out.println("");
+		T1P3.showAddresses();
+		System.out.println("");
+		T1P4.showAddresses();
+                System.out.println("");
+		T1P5.showAddresses();
+		System.out.println("");
+		p7.showAddresses();
+		System.out.println("");
+		P6.showAddresses();
+		
 //                System.out.println("\n");
 //
 //

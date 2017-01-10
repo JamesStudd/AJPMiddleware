@@ -8,6 +8,7 @@ import Agents.MetaAgent;
 import Agents.Portal;
 import Agents.UserAgent;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -62,7 +63,7 @@ public class Testing {
             P2Test.put("T1P3One", HeadPortal);
             P2Test.put("T1P5", HeadPortal);
             
-            HashMap<String, MetaAgent> P3Test = new HashMap<String, MetaAgent>();
+            ConcurrentHashMap<String, MetaAgent> P3Test = new ConcurrentHashMap<String, MetaAgent>();
             P3Test.put("HeadPortal", HeadPortal);
             P3Test.put("T1P5", T1P5);
             P3Test.put("T1P2Two", HeadPortal);
@@ -73,7 +74,7 @@ public class Testing {
             P3Test.put("T1P5One", T1P5);
             P3Test.put("T1P3One", T1P3One);
             
-            HashMap<String, MetaAgent> P4Test = new HashMap<String, MetaAgent>();
+            ConcurrentHashMap<String, MetaAgent> P4Test = new ConcurrentHashMap<String, MetaAgent>();
             P4Test.put("T1P5", T1P2);
             P4Test.put("T1P2Two" ,T1P2);
             P4Test.put("T1P3", T1P2);
@@ -84,7 +85,7 @@ public class Testing {
             P4Test.put("HeadPortal", T1P2);
             P4Test.put("T1P2", T1P2);
             
-            HashMap<String, MetaAgent> P5Test = new HashMap<String, MetaAgent>();
+            ConcurrentHashMap<String, MetaAgent> P5Test = new ConcurrentHashMap<String, MetaAgent>();
             P5Test.put("T1P2Two", T1P3);
             P5Test.put("T1P3", T1P3);
             P5Test.put("T1P4", T1P3);
