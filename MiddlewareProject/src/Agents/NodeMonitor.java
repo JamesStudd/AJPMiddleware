@@ -10,7 +10,6 @@ import GUI.MessageBoard;
 import Messages.MessageType;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  *
@@ -34,6 +33,7 @@ public class NodeMonitor extends MetaAgent {
 
     public String formatHistory(String obj ,String type, String date, String sender, String recip, String history){
 
+	    if(history == null) history = "";
 	    return history + String.format("-----------------------\n"
 		    + " Date %s \n Type %s \n Sender %s \n Recpient  %s \n Message %s "
 		    + " \n -----------------------\n\n", date, type, sender, recip, obj);
