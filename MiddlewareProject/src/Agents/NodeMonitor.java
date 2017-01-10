@@ -19,6 +19,7 @@ public class NodeMonitor extends MetaAgent {
     public NodeMonitor(String name) {
         super(name);
         mb = new MessageBoard();
+        mb.setVisible(true);
     }
 
     @Override

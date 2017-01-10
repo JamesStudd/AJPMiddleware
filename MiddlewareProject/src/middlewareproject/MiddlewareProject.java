@@ -38,6 +38,8 @@ public class MiddlewareProject {
             //Tier 3
             Portal T1P4 = new Portal("T1P4", T1P2);
             Portal T1P5 = new Portal("T1P5", T1P3);
+            NodeMonitor nm = new NodeMonitor("NM1");
+            T1P5.addMonitor(nm);
             //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
            // Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
            // Portal T1P7 = new Portal("Tree 1, Portal 7", T1P3);
@@ -73,6 +75,8 @@ public class MiddlewareProject {
 //            UserAgent T1P4Four = new UserAgent("T1P4Four", T1P4, null);
 //            //T1P5
            UserAgent T1P5One = new UserAgent("T1P5One", T1P5, null);
+           
+           
 //            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
 //            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
 //            UserAgent T1P5Four = new UserAgent("T1P5Four", T1P5, null);
