@@ -304,9 +304,11 @@ public class Portal extends MetaAgent {
 			case ERROR:
 				System.out.println("To do, need to think about what errors we will find");
 				break;
-
 			case FAILED_TO_DELIVER:
 				System.out.println("This should not make it here");
+				break;
+			case ADD_NODE_MONITOR:
+				addMonitor((NodeMonitor) message.retrieveMessageItem());
 				break;
 
 		}

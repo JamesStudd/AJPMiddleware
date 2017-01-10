@@ -5,11 +5,11 @@
  */
 package middlewareproject;
 
-import Agents.MetaAgent;
 import Agents.NodeMonitor;
 import Agents.Portal;
 import Agents.UserAgent;
-import java.util.HashMap;
+import Messages.Message;
+import Messages.MessageType;
 
 /**
  *
@@ -41,7 +41,9 @@ public class MiddlewareProject {
 	    Portal P6 = new Portal("6", null);
 	    Portal p7 = new Portal("7", P6);
             NodeMonitor nm = new NodeMonitor("NM1");
-            T1P5.addMonitor(nm);
+	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", P6));
+	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", HeadPortal));
+	    
             //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
            // Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
            // Portal T1P7 = new Portal("Tree 1, Portal 7", T1P3);

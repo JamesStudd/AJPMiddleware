@@ -20,7 +20,8 @@ public enum MessageType {
 	UPDATE_ADDRESSES(HashMap.class), 
 	ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY(Message.class), 
 	FAILED_TO_DELIVER(Message.class), 
-	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class); 
+	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class), 
+	ADD_NODE_MONITOR(MetaAgent.class);
 
 	Class requiredType;
 

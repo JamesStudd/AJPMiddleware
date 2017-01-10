@@ -61,10 +61,10 @@ public class UserAgent extends MetaAgent {
 			case UPDATE_ADDRESSES: 
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: 
-				System.out.println("To do, should be an error");
+				System.out.println("Address not found, current held in lost property");
 				break;
 			case ERROR:
-				System.out.println("To do, need to think about what errors we will find");
+				System.out.println("Error " + (String) message.retrieveMessageItem());
 
 			case FAILED_TO_DELIVER:
                             //How is this different to address not found or error messages?
