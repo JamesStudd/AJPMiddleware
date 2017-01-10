@@ -14,24 +14,30 @@ import java.util.HashMap;
  */
 public enum MessageType {
 
-	PASS_MESSAGE(String.class), 
-	ADD_NODE(MetaAgent.class), 
-	ERROR(String.class), 
-	UPDATE_ADDRESSES(HashMap.class), 
-	ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY(Message.class), 
-	FAILED_TO_DELIVER(Message.class), 
-	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class), 
-	ADD_NODE_MONITOR(MetaAgent.class);
+	PASS_MESSAGE(String.class, "Message being passed"),
+	ADD_NODE(MetaAgent.class, "Node being added"),
+	ERROR(String.class, "Error message"),
+	UPDATE_ADDRESSES(HashMap.class, "Updating addresses"),
+	ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY(Message.class, "Address not found, adding to lost property"),
+	FAILED_TO_DELIVER(Message.class, "Failed to deliver"),
+	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class, "Wrong type of object was sent with this message"),
+	ADD_NODE_MONITOR(MetaAgent.class, "Adding node monitor ");
 
 	Class requiredType;
+	String description;
 
-	private MessageType(Class t) {
+	private MessageType(Class t,String description) {
 		requiredType = t;
+		this.description = description;
+
 	}
 
-	public boolean checkType(Object o){
-		return o.getClass()== requiredType || o.getClass().getSuperclass() == requiredType;
-	} 
-}
+	public boolean checkType(Object o) {
+		return o.getClass() == requiredType || o.getClass().getSuperclass() == requiredType;
+	}
 
-	
+	public String toString(){
+		return description;
+		
+	}
+}
