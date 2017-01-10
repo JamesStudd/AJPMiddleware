@@ -4,16 +4,10 @@
  * and open the template in the editor.
  */
 
-import Agents.Portal;
 import Agents.MetaAgent;
-import Agents.NodeMonitor;
+import Agents.Portal;
 import Agents.UserAgent;
-import Messages.Message;
-import Messages.MessageType;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,12 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author Sean
  */
-public class ScenarioTesting {
+public class Testing {   
     
-    public ScenarioTesting() {
-    }
-    
-    @Test
+    //@Test
     public void testingAddresses() throws InterruptedException { 
         
             //Head
@@ -92,18 +83,86 @@ public class ScenarioTesting {
             P4Test.put("T1P2One", T1P2);
             P4Test.put("HeadPortal", T1P2);
             P4Test.put("T1P2", T1P2);
+            
+            HashMap<String, MetaAgent> P5Test = new HashMap<String, MetaAgent>();
+            P5Test.put("T1P2Two", T1P3);
+            P5Test.put("T1P3", T1P3);
+            P5Test.put("T1P4", T1P3);
+            P5Test.put("T1P4One", T1P3);
+            P5Test.put("T1P5One", T1P5One);
+            P5Test.put("T1P3One", T1P3);
+            P5Test.put("HeadPortal", T1P3);
+            P5Test.put("T1P2", T1P3);
+            
+            
            
             
             assertEquals(T1P2.getRegisteredAddresses(), P2Test);
             assertEquals(T1P3.getRegisteredAddresses(), P3Test);
             assertEquals(T1P4.getRegisteredAddresses(), P4Test);
-            
- 
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+            assertEquals(T1P5.getRegisteredAddresses(), P5Test);
 }
+    //Need to figure out how to assertEquals on some tests
+    //I guess just do a version of this with 2 tiers of portals and send a message up 1 layer when it's out of scope and show it doesn't work
+    //@Test
+    public void usersOnSinglePortal() throws InterruptedException { 
+        Portal testPortal = new Portal("testPortal");
+        
+        UserAgent userOne = new UserAgent("userOne", testPortal, null);
+        UserAgent userTwo = new UserAgent("userTwo", testPortal, null);
+        UserAgent userThree = new UserAgent("userThree", testPortal, null);
+        
+        Thread.sleep(2000);
+        
+        userOne.passOverAMessage("userTwo", "User one sending a message to user two.");
+        userOne.passOverAMessage("userThree", "User one sending a message to user three.");
+        
+        userTwo.passOverAMessage("userOne", "User two sending a message to user one.");
+        userTwo.passOverAMessage("userThree", "User two sending a message to user three");
+        
+        userThree.passOverAMessage("userOne", "User three sending a message to user one.");
+        userThree.passOverAMessage("userTwo", "User three sending a message to user two.");
+
+    }
+    
+    //@Test
+    //This seems way too simple of a test?
+    public void portalPortalLink() throws InterruptedException {
+        Portal tier1Portal = new Portal("tier1Portal");
+        Portal tier2Portal = new Portal("tier2Portal", tier1Portal);
+        
+        Thread.sleep(2000);
+        
+        tier1Portal.showAddresses();
+    }
+    
+    //repeating tests to validate scoping?
+    //create a portal that is scoped elswhere and show it updates to scope
+    //Make a portal on Tier 2 and show that the reference on Tier 3 points to Tier 2
+    //SINGLE HIERARCHIES NOT MULTIPLE
+    @Test
+    public void agentRegistration() throws InterruptedException {
+            //Head
+            Portal HeadPortal = new Portal("HeadPortal");
+            //Tier 2
+            Portal T1P2 = new Portal("T1P2", HeadPortal);
+	    
+            //Tier 3
+            Portal T1P3 = new Portal("T1P3", T1P2);
+            
+            System.out.println("\n\n");
+                     
+           UserAgent T1P2Test = new UserAgent("T1P2Test", T1P2, null);
+           
+           Thread.sleep(1000);
+           
+           T1P3.showAddresses();
+    }
+    
+    
+    
+    
+    
+    
+    
+    }

@@ -52,15 +52,15 @@ public class UserAgent extends MetaAgent {
 
 			case PASS_MESSAGE:
 				String theMessage = (String) message.retrieveMessageItem(); //Is this when the user has recieved a message
-				System.out.println("Message: " + theMessage);
+				System.out.println(this.toString() + " Recieved message: " + theMessage);
 				break;
 			case ADD_NODE: //not used in users
 				System.out.println("Error, User Agents cannot have nodes created on them!"); 
                                 parent.addToQueue(new Message<String> (MessageType.ERROR, this.toString(),message.getSender(), "Error, User Agents cannot have nodes created on them!"));
 				break;
-			case UPDATE_ADDRESSES: //not used in users also needs to send an error msg back
+			case UPDATE_ADDRESSES: 
 				break;
-			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: //Is this going to go through the system and try to find a user or does it know straight away it doesn't exist
+			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY: 
 				System.out.println("To do, should be an error");
 				break;
 			case ERROR:

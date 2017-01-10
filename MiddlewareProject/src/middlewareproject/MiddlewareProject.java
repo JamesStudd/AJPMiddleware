@@ -5,9 +5,11 @@
  */
 package middlewareproject;
 
+import Agents.MetaAgent;
 import Agents.NodeMonitor;
 import Agents.Portal;
 import Agents.UserAgent;
+import java.util.HashMap;
 
 /**
  *
@@ -86,9 +88,7 @@ public class MiddlewareProject {
 //            UserAgent T1P7Four = new UserAgent("T1P7Four", T1P7, null);
 //	   
             System.out.println("\n\n");
-//            
-//	    
-//	    
+    
            Thread.sleep(5000);
                 System.out.println("Displaying Tree 1:");
                 HeadPortal.showAddresses();
@@ -122,18 +122,10 @@ public class MiddlewareProject {
 //           Thread.sleep(5000);
 //           
 //           UserAgent T1P5Five = new UserAgent("T1P5Five", T1P5, null);
-           
-           
+                      
             
             
-            
-            
-            
-            
-            
-            
-            
-//            //Chris' example
+//              //Chris' example
 //		Portal portalOne = new Portal("Portal 1");
 //		Portal portalTwo = new Portal("portal2", portalOne);
 //		Portal portalThree = new Portal("portal3", portalOne);
