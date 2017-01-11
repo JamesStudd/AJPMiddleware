@@ -27,7 +27,6 @@ public class UserAgent extends MetaAgent {
 		if (parent == null) {
 			return;
 		}
-		System.out.println(this.toString() + " has been created, alerting parent.");
 		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
 	}
 
@@ -35,7 +34,6 @@ public class UserAgent extends MetaAgent {
 	private MetaAgent parent;
 
 	public void passOverAMessage(String to, String message) {
-		System.out.println("message is being sent");
 		parent.addToQueue(new Message(MessageType.PASS_MESSAGE, this.toString(), to, message));
 	}
 
@@ -60,7 +58,7 @@ public class UserAgent extends MetaAgent {
 			case UPDATE_ADDRESSES:
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
-				System.out.println("Address not found, current held in lost property");
+				System.out.println("Address not found, holding message in lost property.");
 				break;
 			case ERROR:
 				System.out.println("Error " + (String) message.retrieveMessageItem());

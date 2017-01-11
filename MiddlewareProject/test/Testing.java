@@ -5,8 +5,13 @@
  */
 
 import Agents.MetaAgent;
+import Agents.NodeMonitor;
 import Agents.Portal;
 import Agents.UserAgent;
+import Messages.Message;
+import Messages.MessageType;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.After;
@@ -20,10 +25,25 @@ import static org.junit.Assert.*;
  *
  * @author Sean
  */
-public class Testing {   
+public class Testing {
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
+    @Before
+    public void setUpStreams() {
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
+    }
+
+    @After
+    public void cleanUpStreams() {
+        System.setOut(null);
+        System.setErr(null);
+    }
     
     //@Test
     public void testingAddresses() throws InterruptedException { 
+        
         
             //Head
             Portal HeadPortal = new Portal("HeadPortal");
@@ -103,8 +123,7 @@ public class Testing {
             assertEquals(T1P4.getRegisteredAddresses(), P4Test);
             assertEquals(T1P5.getRegisteredAddresses(), P5Test);
 }
-    //Need to figure out how to assertEquals on some tests
-    //I guess just do a version of this with 2 tiers of portals and send a message up 1 layer when it's out of scope and show it doesn't work
+
     //@Test
     public void usersOnSinglePortal() throws InterruptedException { 
         Portal testPortal = new Portal("testPortal");
@@ -123,42 +142,135 @@ public class Testing {
         
         userThree.passOverAMessage("userOne", "User three sending a message to user one.");
         userThree.passOverAMessage("userTwo", "User three sending a message to user two.");
+        
 
     }
     
     //@Test
-    //This seems way too simple of a test?
     public void portalPortalLink() throws InterruptedException {
         Portal tier1Portal = new Portal("tier1Portal");
         Portal tier2Portal = new Portal("tier2Portal", tier1Portal);
         
-        Thread.sleep(2000);
+        Thread.sleep(500);
         
         tier1Portal.showAddresses();
     }
     
-    //repeating tests to validate scoping?
-    //create a portal that is scoped elswhere and show it updates to scope
-    //Make a portal on Tier 2 and show that the reference on Tier 3 points to Tier 2
-    //SINGLE HIERARCHIES NOT MULTIPLE
-    @Test
-    public void agentRegistration() throws InterruptedException {
-            //Head
-            Portal HeadPortal = new Portal("HeadPortal");
-            //Tier 2
-            Portal T1P2 = new Portal("T1P2", HeadPortal);
-	    
-            //Tier 3
-            Portal T1P3 = new Portal("T1P3", T1P2);
+   @Test
+    public void sendMessageBetweenPortals() throws InterruptedException {
+        
+            Portal portalOne = new Portal("portalOne");
+            Portal portalTwo = new Portal("portalTwo", portalOne);
             
-            System.out.println("\n\n");
-                     
-           UserAgent T1P2Test = new UserAgent("T1P2Test", T1P2, null);
-           
-           Thread.sleep(1000);
-           
-           T1P3.showAddresses();
+            UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
+            UserAgent portalTwoAgent = new UserAgent("portalTwoAgent", portalTwo, null);
+            
+            Thread.sleep(500);
+            
+            portalTwoAgent.passOverAMessage("portalOneAgent", "Passing a message to a user agent in a different portal.");
+            
+            Thread.sleep(500);
+            
+            String expected = "Passing a message to a user agent in a different portal.";
+            
+            Thread.sleep(500);
+            
+            assertEquals(expected, outContent.toString());
+
     }
+    
+    //@Test
+    public void sendMessageToUserThatIsNotCreated() throws InterruptedException {
+            Portal portalOne = new Portal("portalOne");
+            Portal portalTwo = new Portal("portalTwo", portalOne);
+            
+            UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
+            
+            Thread.sleep(500);
+            
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
+            
+            Thread.sleep(500);
+    }
+    
+    //@Test
+    public void sendMessageToUserOutOfScope() throws InterruptedException {
+            Portal portalOne = new Portal("portalOne");
+            Portal portalTwo = new Portal("portalTwo", portalOne);
+                       
+            UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
+            UserAgent portalTwoAgent = new UserAgent("portalTwoAgent", portalTwo, portalTwo);
+            
+            Thread.sleep(500);
+            
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent outside of scope.");
+            
+            Thread.sleep(500);
+    }
+    
+    //@Test
+    public void creatingUserThatHasMessageWaitingInLostProperty() throws InterruptedException {
+            Portal portalOne = new Portal("portalOne");
+            UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
+
+            
+            Thread.sleep(500);
+            
+            agentOne.passOverAMessage("agentTwo", "Passing a message to a user agent outside of scope.");
+            
+            Thread.sleep(500);
+            
+            UserAgent agentTwo = new UserAgent("agentTwo", portalOne, null);                      
+    }
+    
+    
+    //@Test
+    public void introducingTwoPortals() throws InterruptedException {
+            Portal portalOne = new Portal("portalOne");
+            Portal portalTwo = new Portal("portalTwo");
+            UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
+            UserAgent portalTwoAgent = new UserAgent("portalTwoAgent", portalTwo, null);
+            
+            Thread.sleep(500);
+            
+            portalTwo.setParent(portalOne);
+            
+            Thread.sleep(500);
+            
+            ConcurrentHashMap<String, MetaAgent> testMap = new ConcurrentHashMap<String, MetaAgent>();
+            testMap.put("portalOneAgent", portalOneAgent);
+            testMap.put("portalTwo", portalTwo);
+            testMap.put("portalTwoAgent", portalTwo);
+            testMap.put("portalOne", portalOne);  
+            
+            Thread.sleep(500);
+          
+            assertEquals(testMap, portalOne.getRegisteredAddresses());                                      
+    }
+    
+    //@Test
+    public void defaultNodeMonitor() throws InterruptedException {
+            Portal portalOne = new Portal("portalOne");
+            UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
+            UserAgent agentTwo = new UserAgent("agentTwo", portalOne, null);
+
+            
+            Thread.sleep(500);
+            
+            agentOne.passOverAMessage("agentTwo", "Node monitor test message.");
+                        
+            Thread.sleep(500);
+            
+            NodeMonitor nm = new NodeMonitor("NM1");
+	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", agentTwo));
+            
+                 
+    }
+    
+    
+    
+    
+    
     
     
     
