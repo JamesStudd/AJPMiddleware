@@ -260,35 +260,47 @@ public class Portal extends MetaAgent {
 		}
 	}
 
-	//This method removes all address that are not to be added because  they point to this node or they are children of this node
-	private HashMap<String, MetaAgent> getAllAddressesThatNeedUpdating(HashMap<String, MetaAgent> in, Map<String, MetaAgent> current) {
-		Iterator<String> comingIn = in.keySet().iterator();
+	/**
+	 * This method takes in an address book from another agent and runs through it to see if there
+	 * are any entries that are either not in this portals address book or that any entry in this 
+	 * portals address book needs changing. 
+	 * @param addressBookPassedIn - The address book that has been passed in and needs checking against
+	 * @return  Either null if no nodes need adding to this portals address book or a map of all node that do need adding
+	 */
+	private HashMap<String, MetaAgent> getAllAddressesThatNeedUpdating(HashMap<String, MetaAgent> addressBookPassedIn) {
+		Iterator<String> keyIteratorForAddressBookPassedIn = addressBookPassedIn.keySet().iterator();
 		ArrayList<String> toBeRemoved = new ArrayList();
-		MetaAgent inAgent;
-		MetaAgent currentAgent;
+		MetaAgent agentOfPassedInAddressBook;
+		MetaAgent agentFromThisPortalsAddresses;
 		boolean somethingIsDueToChange = false;
-		while (comingIn.hasNext()) {
-			String next = comingIn.next();
-			if (current.containsKey(next)) {
-				inAgent = in.get(next);
-				currentAgent = current.get(next);
+
+		while (keyIteratorForAddressBookPassedIn.hasNext()) {
+			String next = keyIteratorForAddressBookPassedIn.next();
+			if (registeredAddresses.containsKey(next)) {
+
+				agentOfPassedInAddressBook = addressBookPassedIn.get(next);
+				agentFromThisPortalsAddresses = registeredAddresses.get(next);
+
 				if (next.equals(this.toString())) {
 					toBeRemoved.add(next);
 				}
-				if (inAgent == this || children.contains(registeredAddresses.get(next))) {
+				//We don't need any entries that relate to this portal or this portals children
+				if (agentOfPassedInAddressBook == this || children.contains(registeredAddresses.get(next))) {
 					toBeRemoved.add(next);
-				} else if (inAgent != currentAgent) {
+				} else if (agentOfPassedInAddressBook != agentFromThisPortalsAddresses) {
 					somethingIsDueToChange = true;
 				}
 			} else {
+				//This is because the passed in map has an entry that this portals address book doesn't have
 				somethingIsDueToChange = true;
 			}
 		}
-		toBeRemoved.forEach(a -> in.remove(a));
+		//Remove from the passed address book anything that doesn't need updating in this portal
+		toBeRemoved.forEach(a -> addressBookPassedIn.remove(a));
 		if (!somethingIsDueToChange) {
 			return null;
 		}
-		return in;
+		return addressBookPassedIn;
 	}
 
 	//Shows all the addresses and values of a passed node - this method is used for debugging 
@@ -325,7 +337,7 @@ public class Portal extends MetaAgent {
 	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
 	private void updateAddressBook(Message message) {
 
-		HashMap<String, MetaAgent> newAddressesThatNeedAdding = getAllAddressesThatNeedUpdating((HashMap< String, MetaAgent>) message.retrieveMessageItem(), registeredAddresses);
+		HashMap<String, MetaAgent> newAddressesThatNeedAdding = getAllAddressesThatNeedUpdating((HashMap< String, MetaAgent>) message.retrieveMessageItem());
 
 		if (newAddressesThatNeedAdding == null) {
 			return;
