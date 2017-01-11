@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix} Christopher Culley, Sean Johnson and James Studd
+<#if licenseLast??>
+${licenseLast}
+</#if>

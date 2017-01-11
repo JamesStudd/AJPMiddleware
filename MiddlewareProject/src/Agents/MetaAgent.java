@@ -9,20 +9,32 @@ import Messages.Message;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
- * @author Sean
- */public abstract class MetaAgent implements Runnable {
+ *  This class is the abstract building blocks for agents
+ */
+
+public abstract class MetaAgent implements Runnable {
      
 	 private Thread objectThread; 
-        //constructor for metaagents only takes in name atm, needs to have other things overloaded onto it from subclasses like scope, parent
+	 private MetaAgent scope;
+         private String name;
+	 private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
+	 
+	 /**
+	  * Constructor starts a new thread per instatiation
+	  * @param name  - The name of the object
+	  */
         public MetaAgent(String name) {   
             this.name = name;
 	    objectThread = new Thread(this);
 	    objectThread.start();
-
         }
 
-	 //constructor for metaagents only takes in name atm, needs to have other things overloaded onto it from subclasses like scope, parent
+
+	/**
+	 * Constructor that also contains a scope 
+	 * @param name - The name of the object
+	 * @param scope  - The scope by which the object is defined
+	 */
         public MetaAgent(String name, MetaAgent scope) {   
             this.name = name;
 	    objectThread = new Thread(this);
@@ -31,46 +43,54 @@ import java.util.concurrent.LinkedBlockingQueue;
 
         }
         
-        //Name for user ease/debugging
-        private String name;
+       
 
-	//This should be in the meta object
-	private LinkedBlockingQueue<Message> queue = new LinkedBlockingQueue<>();
 
-	private MetaAgent scope;
-
-	//Should be in the meta
-	private Thread thread = new Thread();
-	
-	//Public enabling others to add messages to its queue
+	/**
+	 * Adds a message to the queue
+	 * @param message  - The message to be added
+	 */
 	public void addToQueue(Message message){
 		queue.add(message);
 	}
 
-	//Handles a message pull
+	/**
+	 * An abstract handle method that deals with the passed message object
+	 * @param message 
+	 */
 	abstract void handle(Message message);
 
 
+	/**
+	 * Get the scope by which the object is defined
+	 * @return 
+	 */
 	public MetaAgent getScope(){
 		return scope;
 	}
 
+	/**
+	 * Gets the scope by name 
+	 * @param name - Name of the node that the scope is required
+	 * @return  - The nodes scope
+	 */
 	public MetaAgent getScope(String name){
 		return scope;
 	}
-
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+	/**
+	 * Gets the name of the object
+	 * @return  - the name given to the object
+	 */
 	@Override
 	public String toString() {
 		return name;
 	}
 
 
+	/**
+	 * The run method continually removes object from the blocking queue 
+	 * as they come in and handles them
+	 */
 	@Override
 	public void run() {
 

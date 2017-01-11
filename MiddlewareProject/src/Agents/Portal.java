@@ -17,8 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
- * @author chris
+ * This class contains all the functionality of the middleware Portals
  */
 public class Portal extends MetaAgent {
 
@@ -37,48 +36,73 @@ public class Portal extends MetaAgent {
 	//A set of all the active monitors of the portal
 	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
 
-	//Constructor starts the thread
+	/**
+	 * Constructor , sets the name and parent
+	 *
+	 * @param name - The name of the portal
+	 */
 	public Portal(String name) {
 		super(name);
 		setParent(null);
 	}
 
-	//Constructor that takes a parent to the portal
+	/**
+	 * Constructor , sets the name and the parent
+	 *
+	 * @param name - The name of the portal
+	 * @param parent - The name of the parent to this portal
+	 */
 	public Portal(String name, MetaAgent parent) {
 		super(name);
 		setParent(parent);
 
 	}
 
-	//Sets the parent and updates the parent with its address book
+	/**
+	 * Sets the parent pointer of this portal. Once added it will add the
+	 * parent to the address book and request that the parent add this
+	 * portal to its address book. If this portal has children than full
+	 * update updates are required so amended addressbook is sent to the
+	 * parent, which will come back with their updates and then forwarded to
+	 * this portals children
+	 *
+	 * @param parent - The parent to this portal
+	 */
 	public void setParent(MetaAgent parent) {
 		this.parent = parent;
 		if (parent != null) {
 			registeredAddresses.put(parent.toString(), parent);
-			if (children.isEmpty()) {
-				parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
-			} else {
-				parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
+			parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
+			if (!children.isEmpty()) {
 				parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), prepareAddressBookForTransfer(true)));
 			}
 		}
 	}
 
-	public MetaAgent getParent() {
-		return parent;
-	}
-
-	//Adds a monitor to report to with messages
-	public void addMonitor(NodeMonitor mon) {
+	/**
+	 * This adds a monitor to the list of monitors watching this portal
+	 *
+	 * @param mon
+	 */
+	private void addMonitor(NodeMonitor mon) {
 		monitors.add(mon);
 	}
 
-	//Removes a monitor 
+	/**
+	 * This removes a monitor from the list of monitors watching the portal
+	 *
+	 * @param mon
+	 */
 	private void removeMontior(MetaAgent mon) {
 		monitors.remove(mon);
 	}
 
-	//Updates all current monitors with information about messages coming through
+	/**
+	 * This updates all the registered monitors with the message given to
+	 * this portal
+	 *
+	 * @param message - The message recieved
+	 */
 	private void updateMonitors(Message message) {
 		Iterator<NodeMonitor> it = monitors.iterator();
 		while (it.hasNext()) {
@@ -86,58 +110,91 @@ public class Portal extends MetaAgent {
 		};
 	}
 
-	//If the passes meta agent is a reference to this object
+	/**
+	 * Checks if the passed string is the same as this portal
+	 *
+	 * @param x
+	 * @return
+	 */
 	private boolean isForMe(String x) {
 		return x == this.toString();
 	}
 
-	//Removes the child from the map passed in
-	private Map<String, MetaAgent> removeChild(Map<String, MetaAgent> m, MetaAgent child) {
-		m.remove(child.toString());
-		return m;
+	/**
+	 * Removes an entry from the passed map (this is so that it can be used
+	 * in a lambda )
+	 *
+	 * @param map - The map that the entry needs removing from
+	 * @param entry - The entry that needs removing
+	 * @return The map with the entry removed
+	 */
+	private Map<String, MetaAgent> removeItem(Map<String, MetaAgent> map, MetaAgent entry) {
+		map.remove(entry.toString());
+		return map;
 	}
 
-	//Used for testing
+	/**
+	 * This method is used for testing - gets the address book of this
+	 * portal
+	 *
+	 * @return - The address book of this portal
+	 */
 	public ConcurrentHashMap<String, MetaAgent> getRegisteredAddresses() {
 		return registeredAddresses;
 	}
 
-	private Map<String, MetaAgent> prepareAddressBookForTransfer(boolean forParent) {
+	/**
+	 * When the address book is sent to other nodes in the system it needs amending such that 
+	 * addresses that should come through this portal need to be changed to be pointing to
+	 * this portal rather than them. Also all nodes that are scoped at this node should not be
+	 * passed up the parent. This method captures all of that functionality and creates a 
+	 * new map with the updated pointers
+	 * @param isForParent - If this preparation is for a parent node
+	 * @return  A map with the address updated as appropriate from this nodes registered addresses
+	 */
+	private Map<String, MetaAgent> prepareAddressBookForTransfer(boolean isForParent) {
 
-		Map<String, MetaAgent> addressesToBePassedUp = new HashMap<>();
-
+		Map<String, MetaAgent> addressBookToBeReturned = new HashMap<>();
 		Iterator<String> addresses = registeredAddresses.keySet().iterator();
 		while (addresses.hasNext()) {
-			String next = addresses.next();
-			MetaAgent nextAd = registeredAddresses.get(next);
-			if (nextAd.getScope(next) == this) {
+			String nextAddressKey = addresses.next();
+			MetaAgent nextAddressValue = registeredAddresses.get(nextAddressKey);
+			if (isForParent && nextAddressValue.getScope(nextAddressKey) == this) {
 				continue;
 			}
-			if (forParent) {
-				if (children.contains(nextAd)) {
-					addressesToBePassedUp.put(next, this);
+			if (isForParent) {
+				if (children.contains(nextAddressValue)) {
+					addressBookToBeReturned.put(nextAddressKey, this);
 				} else {
-					addressesToBePassedUp.put(next, nextAd);
+					addressBookToBeReturned.put(nextAddressKey, nextAddressValue);
 				}
 			} else {
-				addressesToBePassedUp.put(next, this);
+				addressBookToBeReturned.put(nextAddressKey, this);
 			}
 		}
 
-		return addressesToBePassedUp;
+		return addressBookToBeReturned;
 	}
 
-	//Runs through all the children and updates with current addressbook
+	/**
+	 * This method runs through all this Portals children and updates them with a amended addressbook if they are also
+	 *  of type portal (since user agents don't require address books).It does this by requesting they update their address
+	 *  book via placing a message on their blocking queue
+	 */
 	private void updateChildrenWithAddressBook() {
 		children.forEach(a -> {
 			if (a.getClass() == this.getClass()) {
 				a.addToQueue(new Message<>(MessageType.UPDATE_ADDRESSES, this.toString(), a.toString(),
-					removeChild(prepareAddressBookForTransfer(false), a)));
+					removeItem(prepareAddressBookForTransfer(false), a)));
 			}
 		});
 	}
 
-	//Updates parent with address book, filters any node addresses whos scope is this node
+	/**
+	 * Updates the parent node with an amended address book with the nodes that are scoped to this
+	 * portal are removed and this nodes decendents addresses to be this portal so that future messages
+	 * come through there
+	 */
 	private void updateParentWithAddressBook() {
 		if (parent == null) {
 			return;
@@ -145,22 +202,36 @@ public class Portal extends MetaAgent {
 		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), prepareAddressBookForTransfer(true)));
 	}
 
-	private void passNodeToChildren(String node, MetaAgent address) {
+	/**
+	 * This method updates all this portals children with the new node. It does this via their blocking 
+	 * queue and by asking that any messages to that node come through this node.
+	 * @param node - The node that needs to be added
+	 * @param address  - The address that this portal has for that node
+	 */
+	private void requestChildrenToAddNode(String node, MetaAgent address) {
 		children.forEach((a) -> {
+			//Checks that we are not sending the request back to a node that sent it to us
 			if (!a.equals(address) && a.getClass() == this.getClass()) {
 				a.addToQueue(new Message(MessageType.ADD_NODE, node, a.toString(), this));
 			}
 		});
 	}
 
-	//Adds a node  to the portals children and updates the address
+	/**
+	 * Adds a node to its address book.If the node string passed in is the same 
+	 * as the name of address passed in, then the node is added to this portals children
+	 * This method then passes a request to its children and parent to add the node depending
+	 * on scope. Finally, the lost property is checked to see if the new node has any lost mail.
+	 * @param node - The string name of the node whos address is to be added
+	 * @param address  - The node pointer which is to be sent any messages to the new node
+	 */
 	private void addNode(String node, MetaAgent address) {
 
 		registeredAddresses.put(node, address);
 		if (node == address.toString()) {
 			children.add(address);
 		}
-		passNodeToChildren(node, address);
+		requestChildrenToAddNode(node, address);
 		if (parent != null && address != (parent) && address.getScope(node) != this) {
 			parent.addToQueue(new Message(MessageType.ADD_NODE, node, parent.toString(), this));
 		}
@@ -172,10 +243,6 @@ public class Portal extends MetaAgent {
 
 	}
 
-	//True is the scope of the metaAgent is this node
-	private boolean scopedHere(MetaAgent scope) {
-		return scope == this;
-	}
 
 	//Method used for dubugging
 	public void showAddresses() {

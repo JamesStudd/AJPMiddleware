@@ -37,6 +37,8 @@ public class UserAgent extends MetaAgent {
 		parent.addToQueue(new Message(MessageType.PASS_MESSAGE, this.toString(), to, message));
 	}
 
+
+	
 	//public void sendMessage (Message message)();
 	//parent.addToQueue?
 	//Handles a message pull
