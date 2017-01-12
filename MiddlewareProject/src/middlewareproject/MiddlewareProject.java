@@ -42,7 +42,6 @@ public class MiddlewareProject {
 	    Portal p7 = new Portal("7", P6);
             NodeMonitor nm = new NodeMonitor("NM1");
 	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", P6));
-	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", HeadPortal));
 	    
             //Portal T1P5 = new Portal("Tree 1, Portal 5", T1P2);
            // Portal T1P6 = new Portal("Tree 1, Portal 6", T1P3);
@@ -82,6 +81,10 @@ public class MiddlewareProject {
            
 	   UserAgent a = new UserAgent("a", p7, T1P3);
 	   UserAgent b = new UserAgent("b", p7, null);
+
+	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", b));
+	   
+	   b.passOverAMessage("TP1P2One", "I am a message that will go through lost property");
            
 //            UserAgent T1P5Two = new UserAgent("T1P5Two", T1P5, T1P2);
 //            UserAgent T1P5Three = new UserAgent("T1P5Three", T1P5, T1P5);
@@ -99,6 +102,7 @@ public class MiddlewareProject {
 //	   
             System.out.println("\n\n");
     
+	    /*
            Thread.sleep(5000);
                 System.out.println("Displaying Tree 1:");
                 HeadPortal.showAddresses();
@@ -142,6 +146,7 @@ public class MiddlewareProject {
 //
 //                T1P3.showAddresses();
 //                
+*/
 //                
 //                System.out.println("\n\n\n\n");
 //Literally have no idea where this getScope bug is coming from now

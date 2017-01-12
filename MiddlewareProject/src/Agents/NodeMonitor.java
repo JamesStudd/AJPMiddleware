@@ -102,9 +102,8 @@ public class NodeMonitor extends MetaAgent {
 				type = "HashMap";
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
-				obj = (String) message.retrieveMessageItem();
-				type = "Message";
-				break;
+				updateAndShowMessage((Message) message.retrieveMessageItem(), true);
+				return;
 			case FAILED_TO_DELIVER:
 				obj = (String) message.retrieveMessageItem();
 				type = "Message";
