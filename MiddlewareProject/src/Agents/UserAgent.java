@@ -7,16 +7,20 @@ package Agents;
 
 import Messages.Message;
 import Messages.MessageType;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  *
- * @author Sean
+ * This class contains all the functionality of a user agent whom sends and
+ * recieves messages
  */
 public class UserAgent extends MetaAgent {
 
-	//constructor for UserAgent
+	ArrayList<NodeMonitor> monitors = new ArrayList();
+
+
 	public UserAgent(String name, MetaAgent parent, MetaAgent scope) {
 		super(name, scope);
 		this.parent = parent;
@@ -30,15 +34,12 @@ public class UserAgent extends MetaAgent {
 		parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), parent.toString(), this));
 	}
 
-
 	private MetaAgent parent;
 
 	public void passOverAMessage(String to, String message) {
 		parent.addToQueue(new Message(MessageType.PASS_MESSAGE, this.toString(), to, message));
 	}
 
-
-	
 	//public void sendMessage (Message message)();
 	//parent.addToQueue?
 	//Handles a message pull
@@ -72,8 +73,5 @@ public class UserAgent extends MetaAgent {
 				break;
 		}
 	}
-
-	//A set of all the active monitors of the portal
-	private Set<NodeMonitor> monitors = new HashSet<NodeMonitor>();
 
 }

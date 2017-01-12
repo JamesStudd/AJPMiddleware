@@ -74,7 +74,11 @@ public class Portal extends MetaAgent {
 			registeredAddresses.put(parent.toString(), parent);
 			parent.addToQueue(new Message(MessageType.ADD_NODE, this.toString(), this.parent.toString(), this));
 			if (!children.isEmpty()) {
-				parent.addToQueue(new Message(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), prepareAddressBookForTransfer(true)));
+				parent.addToQueue(new Message(
+								MessageType.UPDATE_ADDRESSES, 
+								this.toString(), 
+								parent.toString(), 
+								prepareAddressBookForTransfer(true)));
 			}
 		}
 	}
@@ -144,13 +148,16 @@ public class Portal extends MetaAgent {
 	}
 
 	/**
-	 * When the address book is sent to other nodes in the system it needs amending such that 
-	 * addresses that should come through this portal need to be changed to be pointing to
-	 * this portal rather than them. Also all nodes that are scoped at this node should not be
-	 * passed up the parent. This method captures all of that functionality and creates a 
-	 * new map with the updated pointers
+	 * When the address book is sent to other nodes in the system it needs
+	 * amending such that addresses that should come through this portal
+	 * need to be changed to be pointing to this portal rather than them.
+	 * Also all nodes that are scoped at this node should not be passed up
+	 * the parent. This method captures all of that functionality and
+	 * creates a new map with the updated pointers
+	 *
 	 * @param isForParent - If this preparation is for a parent node
-	 * @return  A map with the address updated as appropriate from this nodes registered addresses
+	 * @return A map with the address updated as appropriate from this nodes
+	 * registered addresses
 	 */
 	private Map<String, MetaAgent> prepareAddressBookForTransfer(boolean isForParent) {
 
@@ -177,9 +184,11 @@ public class Portal extends MetaAgent {
 	}
 
 	/**
-	 * This method runs through all this Portals children and updates them with a amended addressbook if they are also
-	 *  of type portal (since user agents don't require address books).It does this by requesting they update their address
-	 *  book via placing a message on their blocking queue
+	 * This method runs through all this Portals children and updates them
+	 * with a amended addressbook if they are also of type portal (since
+	 * user agents don't require address books).It does this by requesting
+	 * they update their address book via placing a message on their
+	 * blocking queue
 	 */
 	private void updateChildrenWithAddressBook() {
 		children.forEach(a -> {
@@ -191,22 +200,28 @@ public class Portal extends MetaAgent {
 	}
 
 	/**
-	 * Updates the parent node with an amended address book with the nodes that are scoped to this
-	 * portal are removed and this nodes decendents addresses to be this portal so that future messages
-	 * come through there
+	 * Updates the parent node with an amended address book with the nodes
+	 * that are scoped to this portal are removed and this nodes decendents
+	 * addresses to be this portal so that future messages come through
+	 * there
 	 */
 	private void updateParentWithAddressBook() {
 		if (parent == null) {
 			return;
 		}
-		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, this.toString(), parent.toString(), prepareAddressBookForTransfer(true)));
+		parent.addToQueue(new Message<Map<String, MetaAgent>>(MessageType.UPDATE_ADDRESSES, 
+								      this.toString(), 
+								      parent.toString(),
+									prepareAddressBookForTransfer(true)));
 	}
 
 	/**
-	 * This method updates all this portals children with the new node. It does this via their blocking 
-	 * queue and by asking that any messages to that node come through this node.
+	 * This method updates all this portals children with the new node. It
+	 * does this via their blocking queue and by asking that any messages to
+	 * that node come through this node.
+	 *
 	 * @param node - The node that needs to be added
-	 * @param address  - The address that this portal has for that node
+	 * @param address - The address that this portal has for that node
 	 */
 	private void requestChildrenToAddNode(String node, MetaAgent address) {
 		children.forEach((a) -> {
@@ -218,12 +233,15 @@ public class Portal extends MetaAgent {
 	}
 
 	/**
-	 * Adds a node to its address book.If the node string passed in is the same 
-	 * as the name of address passed in, then the node is added to this portals children
-	 * This method then passes a request to its children and parent to add the node depending
-	 * on scope. Finally, the lost property is checked to see if the new node has any lost mail.
+	 * Adds a node to its address book.If the node string passed in is the
+	 * same as the name of address passed in, then the node is added to this
+	 * portals children This method then passes a request to its children
+	 * and parent to add the node depending on scope. Finally, the lost
+	 * property is checked to see if the new node has any lost mail.
+	 *
 	 * @param node - The string name of the node whos address is to be added
-	 * @param address  - The node pointer which is to be sent any messages to the new node
+	 * @param address - The node pointer which is to be sent any messages to
+	 * the new node
 	 */
 	private void addNode(String node, MetaAgent address) {
 
@@ -243,7 +261,6 @@ public class Portal extends MetaAgent {
 
 	}
 
-
 	//Method used for dubugging
 	public void showAddresses() {
 
@@ -261,11 +278,15 @@ public class Portal extends MetaAgent {
 	}
 
 	/**
-	 * This method takes in an address book from another agent and runs through it to see if there
-	 * are any entries that are either not in this portals address book or that any entry in this 
-	 * portals address book needs changing. 
-	 * @param addressBookPassedIn - The address book that has been passed in and needs checking against
-	 * @return  Either null if no nodes need adding to this portals address book or a map of all node that do need adding
+	 * This method takes in an address book from another agent and runs
+	 * through it to see if there are any entries that are either not in
+	 * this portals address book or that any entry in this portals address
+	 * book needs changing.
+	 *
+	 * @param addressBookPassedIn - The address book that has been passed in
+	 * and needs checking against
+	 * @return Either null if no nodes need adding to this portals address
+	 * book or a map of all node that do need adding
 	 */
 	private HashMap<String, MetaAgent> getAllAddressesThatNeedUpdating(HashMap<String, MetaAgent> addressBookPassedIn) {
 		Iterator<String> keyIteratorForAddressBookPassedIn = addressBookPassedIn.keySet().iterator();
@@ -325,6 +346,14 @@ public class Portal extends MetaAgent {
 		}
 	}
 
+	/**
+	 * This method retrieves the scope from the passed in node name. If the node is 
+	 * this node it will return its scope, otherwise it will return the scope of the 
+	 * agent held in linked to that node in this portals address book
+	 * @param name - The name of the node whos scope we are retrieving
+	 * @return  The agents scope
+	 */
+	@Override
 	public MetaAgent getScope(String name) {
 		if (name.equals(this.toString())) {
 			return this.getScope();
@@ -333,11 +362,18 @@ public class Portal extends MetaAgent {
 		}
 	}
 
-	//Updates the address book by first checking if there are any changes (returns if this is the case)
-	//This adds all entries of the passed in address bokk to current address book then updtes both children and parent
+	/**
+	 * This method updates this portals address book with the given address book
+	 * passed in within the message. It checks if there is anything to add and adds it if needs be. 
+	 * This method will then update both its children and its parent with the new address book 
+	 * then check for any lost mail that may belong to any new additions
+	 * @param message  - The message which contains a map as its object
+	 */
 	private void updateAddressBook(Message message) {
 
-		HashMap<String, MetaAgent> newAddressesThatNeedAdding = getAllAddressesThatNeedUpdating((HashMap< String, MetaAgent>) message.retrieveMessageItem());
+		HashMap<String, MetaAgent> newAddressesThatNeedAdding = getAllAddressesThatNeedUpdating(
+													(HashMap< String, MetaAgent>)
+													message.retrieveMessageItem());
 
 		if (newAddressesThatNeedAdding == null) {
 			return;
@@ -349,7 +385,11 @@ public class Portal extends MetaAgent {
 
 	}
 
-	//Extracts the message details and handles as appropriate
+	/**
+	 * This method extracts the details from the message and passes it to the 
+	 * relevant message type dependant
+	 * @param message 
+	 */
 	private void extractMessageDetailsAndHandle(Message message) {
 
 		switch (message.getMessageType()) {
@@ -365,13 +405,14 @@ public class Portal extends MetaAgent {
 				updateAddressBook(message);
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
-				System.out.println("To do, should be an error");
+				System.out.println("This should not come through to me as I will not have sent any messages");
 				break;
 			case ERROR:
-				System.out.println("To do, need to think about what errors we will find");
+				System.out.println(this.toString() + " has recieved an error: ");
+				System.out.println((String) message.retrieveMessageItem());
 				break;
 			case FAILED_TO_DELIVER:
-				System.out.println("This should not make it here");
+				System.out.println("This should not come through to me as I will not have sent any messages");
 				break;
 			case ADD_NODE_MONITOR:
 				addMonitor((NodeMonitor) message.retrieveMessageItem());
@@ -381,8 +422,16 @@ public class Portal extends MetaAgent {
 
 	}
 
-	//Looks up the message address and passes on the message if its held in registered addresses
-	//otherwise an error is send back and the message added to lost messages
+	/**
+	 * This method deals with the scenario when we have recieved a message 
+	 * that is not meant for us that needs passing on. It will first try and 
+	 * pass the message on to a known entry in its address book. If the entry 
+	 * is not found in the address book it will log it in lost property and
+	 * send back a message to the original sender that the message has been
+	 * moved to lost property awaiting an update of its forwarding address
+	 * 
+	 * @param message  - The message that is needing to be passed on
+	 */
 	private void lookUpAndPassOn(Message message) {
 
 		if (registeredAddresses.containsKey(message.getRecipient())) {
@@ -390,6 +439,7 @@ public class Portal extends MetaAgent {
 		} else {
 
 			Message removed;
+
 			//Makes sure we are not losing a message when a node already has mail in lost property. Sends an error if this is the case 
 			//due to the message being overriden in lost property
 			if (lostMessages.contains(message.getRecipient())) {
@@ -399,15 +449,31 @@ public class Portal extends MetaAgent {
 				removed = lostMessages.putAndRetrieveLostValue(message.getRecipient(), message);
 
 			}
-			registeredAddresses.get(message.getSender()).addToQueue(new Message(MessageType.ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY, this.toString(), message.getSender(), message));
+			registeredAddresses.get(message.getSender())
+					   .addToQueue(new Message
+								(MessageType.ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY, 
+								this.toString(), 
+								message.getSender(), 
+								message));
+			//If we are removing from our lost property due to being full we let the original sender know
 			if (removed != null) {
-				registeredAddresses.get(removed.getSender()).addToQueue(new Message(MessageType.FAILED_TO_DELIVER, this.toString(), message.getSender(), removed));
+				registeredAddresses.get(removed.getSender())
+							.addToQueue(new Message(MessageType.FAILED_TO_DELIVER, 
+										this.toString(), 
+										message.getSender(), 
+										removed));
 			}
 		}
 
 	}
 
-	//Handles a message pull
+
+	/**
+	 * This method handles a new message being passed by updating the monitors
+	 * If the message is for this portal it will get its details extracted and 
+	 * deal with it, otherwise it will attempt to pass it on
+	 * @param message 
+	 */
 	@Override
 	protected void handle(Message message) {
 		updateMonitors(message);
