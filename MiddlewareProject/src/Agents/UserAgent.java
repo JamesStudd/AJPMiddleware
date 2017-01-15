@@ -104,7 +104,7 @@ public class UserAgent extends MetaAgent {
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
 				System.out.println("Address not found, holding message in lost property.");
 				System.out.println("Message was to " +((Message) message.retrieveMessageItem()).getRecipient());
-				System.out.println("The message was sent on " + ((Message) message.retrieveMessageItem()).dateString());
+				System.out.println("The message was sent on " + ((Message) message.retrieveMessageItem()).getTheDateOfCreation());
  ;
 				break;
 			case ERROR:
@@ -117,7 +117,7 @@ public class UserAgent extends MetaAgent {
 			case FAILED_TO_DELIVER:
 				System.out.println("A message has been unable to be delivered, here is the message contents");
 				System.out.println("Message was to " +((Message) message.retrieveMessageItem()).getRecipient());
-				System.out.println("The message was sent on " + ((Message) message.retrieveMessageItem()).dateString());
+				System.out.println("The message was sent on " + ((Message) message.retrieveMessageItem()).getTheDateOfCreation());
 				break;
 		}
 	}

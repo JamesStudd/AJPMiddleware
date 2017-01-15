@@ -2,13 +2,11 @@ package Messages;
 
 /**
  *
- * @author Matthew
+ * This class builds a generic message which takes a type 'T' as its object type
  */
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Message<T> {
 
@@ -16,24 +14,27 @@ public class Message<T> {
 	private T messageObject;
 
 	private MessageType type = MessageType.ERROR;
-
-	/**
-	 * Stores the name of the sender
-	 */
+	//Name of the sender
 	private String sender;
-	/**
-	 * Stores the previous portal that forwarded the message
-	 */
-
+	//Name of the recipient
 	private String recipient;
-	/**
-	 * Stores the date the message was sent
-	 */
+	//Date of message creation
 	private Calendar date = new GregorianCalendar();
-
 	//The type of message the object is
 	MessageType typeOfMessage;
 
+	/**
+	 * Constructor for the message First we check that the object passed in
+	 * is of the correct type, ie that it matches the type that is
+	 * stipulated according to its messag type. If its not we send a message
+	 * back to the sender letting them know of the error. Otherwise we
+	 * create a message with the given parameters
+	 *
+	 * @param type - The type of message
+	 * @param sender - The person who has sent the message
+	 * @param recipient - The person who the message is for
+	 * @param messageObject - The contents of the message
+	 */
 	public Message(MessageType type, String sender, String recipient, T messageObject) {
 
 		if (!type.checkType(messageObject)) {
@@ -50,41 +51,50 @@ public class Message<T> {
 			this.typeOfMessage = type;
 			this.type = type;
 		}
-
-
 		this.messageObject = messageObject;
 		date = Calendar.getInstance();
-
 	}
 
 	/**
-	 * Returns the date as a string
+	 * Returns the date that the message was created
 	 *
-	 * @return
+	 * @return - The date the message was created
 	 */
-	public String dateString() {
+	public String getTheDateOfCreation() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
 		return dateFormat.format(date.getTime());
 	}
 
-	//Gets the message item
+	/**
+	 * Gets the contents of the message
+	 * @return  - The contents of the message
+	 */
 	public T retrieveMessageItem() {
 		return messageObject;
 	}
 
+	/**
+	 * Gets the type of the message
+	 * @return - The message type
+	 */
 	public MessageType getMessageType() {
 		return type;
 	}
 
+	/**
+	 * Gets the sender of the message
+	 * @return  - The sender of the message
+	 */
 	public String getSender() {
 		return sender;
 	}
 
+	/**
+	 * Gets the recipient of the message
+	 * @return  - The recipient of the message
+	 */
 	public String getRecipient() {
 		return recipient;
 	}
 
-	public Calendar getDate() {
-		return date;
-	}
 }

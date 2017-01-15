@@ -85,47 +85,52 @@ public class NodeMonitor extends MetaAgent {
 		switch (message.getMessageType()) {
 			case PASS_MESSAGE:
 				obj = (String) message.retrieveMessageItem();
-				type = "String";
 				break;
 			case ERROR:
 				obj = (String) message.retrieveMessageItem();
-				type = "String";
 				break;
 
 			case ADD_NODE:
 				MetaAgent n = (MetaAgent) message.retrieveMessageItem();
 				obj = n.toString() + " node added with scope: " + n.getScope();
-				type = "MetaAgent";
 				break;
 			case UPDATE_ADDRESSES:
 				obj = "Address Updated";
-				type = "HashMap";
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
 				updateAndShowMessage((Message) message.retrieveMessageItem(), true);
 				return;
 			case FAILED_TO_DELIVER:
 				obj = (String) message.retrieveMessageItem();
-				type = "Message";
 				break;
 			case WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE:
 				obj = (String) message.retrieveMessageItem();
-				type = "Message";
 				break;
 			case ADD_NODE_MONITOR:
-				MetaAgent agent = (MetaAgent) message.retrieveMessageItem();
-				agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), agent.toString(), this));
-				listOfAllNodesThisMonitorIsWatching.add(agent);
-				NodeMessageHistoryMap.put(agent.toString(), new ArrayList());
-				return;
+				if(isNewMessage){
+					MetaAgent agent = (MetaAgent) message.retrieveMessageItem();
+					agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), agent.toString(), this));
+					listOfAllNodesThisMonitorIsWatching.add(agent);
+					NodeMessageHistoryMap.put(agent.toString(), new ArrayList());
+					NodeMessageHistoryMap.get(agent.toString()).add(message);
+					NodeHistoryAsStringMap.put(agent.toString(), formatHistory("", message.getMessageType().toString(), 
+													message.getTheDateOfCreation(),
+													message.getSender(), message.getRecipient(),
+													NodeHistoryAsStringMap.get(message.getRecipient())));
+				return;}
+				else{
+					obj = "";
+				}
+				break;
 			default:
 				obj = "";
 				type = "";
 		}
 
+		type = message.getMessageType().toString();
 		sender = message.getSender(); 
 		recip = message.getRecipient();
-		date = message.dateString();
+		date = message.getTheDateOfCreation();
 
 		//If This is a new message its details need to be added to the history of that node
 		if (isNewMessage) {

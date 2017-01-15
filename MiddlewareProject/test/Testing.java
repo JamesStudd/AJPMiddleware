@@ -15,17 +15,16 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Testing class
  *
- * @author Sean
  */
 public class Testing {
+
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
@@ -41,7 +40,7 @@ public class Testing {
         System.setErr(null);
     }
     
-    //@Test
+    @Test
     public void testingAddresses() throws InterruptedException { 
         
         
@@ -109,11 +108,15 @@ public class Testing {
             P5Test.put("T1P2Two", T1P3);
             P5Test.put("T1P3", T1P3);
             P5Test.put("T1P4", T1P3);
+	    P5Test.put("T1P2One", T1P3);
             P5Test.put("T1P4One", T1P3);
             P5Test.put("T1P5One", T1P5One);
             P5Test.put("T1P3One", T1P3);
             P5Test.put("HeadPortal", T1P3);
             P5Test.put("T1P2", T1P3);
+
+	    T1P2.showAddresses();
+	    System.out.println(T1P2.getRegisteredAddresses());
             
             
            
@@ -124,7 +127,7 @@ public class Testing {
             assertEquals(T1P5.getRegisteredAddresses(), P5Test);
 }
 
-    //@Test
+    @Test
     public void usersOnSinglePortal() throws InterruptedException { 
         Portal testPortal = new Portal("testPortal");
         
@@ -146,7 +149,7 @@ public class Testing {
 
     }
     
-    //@Test
+    @Test
     public void portalPortalLink() throws InterruptedException {
         Portal tier1Portal = new Portal("tier1Portal");
         Portal tier2Portal = new Portal("tier2Portal", tier1Portal);
@@ -183,7 +186,7 @@ public class Testing {
 
     }
     
-    //@Test
+    @Test
     public void sendMessageToUserThatIsNotCreated() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo", portalOne);
@@ -197,7 +200,7 @@ public class Testing {
             Thread.sleep(500);
     }
     
-    //@Test
+    @Test
     public void sendMessageToUserOutOfScope() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo", portalOne);
@@ -212,7 +215,7 @@ public class Testing {
             Thread.sleep(500);
     }
     
-    //@Test
+    @Test
     public void creatingUserThatHasMessageWaitingInLostProperty() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
@@ -228,7 +231,7 @@ public class Testing {
     }
     
     
-    //@Test
+    @Test
     public void introducingTwoPortals() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo");
@@ -252,7 +255,7 @@ public class Testing {
             assertEquals(testMap, portalOne.getRegisteredAddresses());                                      
     }
     
-    //@Test
+    @Test
     public void defaultNodeMonitor() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             UserAgent agentOne = new UserAgent("agentOne", portalOne, null);

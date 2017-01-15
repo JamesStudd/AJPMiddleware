@@ -9,8 +9,9 @@ import Agents.MetaAgent;
 import java.util.HashMap;
 
 /**
+ * This enum contains all the avaliable message types and the class of object 
+ * they should contain
  *
- * @author chris
  */
 public enum MessageType {
 
@@ -26,16 +27,33 @@ public enum MessageType {
 	Class requiredType;
 	String description;
 
-	private MessageType(Class t,String description) {
-		requiredType = t;
+	/**
+	 * Constructor sets the object variables
+	 * @param messageObjectClass - The class of the object held within this type of message
+	 * @param description  - The description of the message
+	 */
+	private MessageType(Class messageObjectClass,String description) {
+		requiredType = messageObjectClass;
 		this.description = description;
 
 	}
 
+	/**
+	 * Checks that the object passed in is of the same type or a decendent 
+	 * of the type required
+	 * @param o - The object to be checked against
+	 * @return  True if is of the correct type
+	 */
 	public boolean checkType(Object o) {
 		return o.getClass() == requiredType || o.getClass().getSuperclass() == requiredType;
 	}
 
+
+	/**
+	 * Get the description
+	 * @return  - The description of this message type
+	 */
+	@Override
 	public String toString(){
 		return description;
 		
