@@ -28,6 +28,12 @@ public class BoundedHashMap<T, J> {
 		this.bound = bound;
 	}
 
+        public int getSize() {
+            return size;
+        }
+        
+        
+
 	//If we go over the size the oldest key/value is removed to make room and the value is returned
 	/**
 	 * This method inserts an entry into the map. If we are going over the
@@ -67,6 +73,7 @@ public class BoundedHashMap<T, J> {
 		if (contains(key)) {
 			J ret = map.get(key);
 			map.remove(key);
+                        size--;
 			return ret;
 		}
 		return null;

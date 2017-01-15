@@ -100,7 +100,16 @@ public class Portal extends MetaAgent {
 	private void removeMontior(MetaAgent mon) {
 		monitors.remove(mon);
 	}
-
+                
+        /**
+	 * Returns the lost messages, only used for testing.
+	 *
+	 */
+        public BoundedHashMap<String, Message> getLostMessages() {
+            return lostMessages;
+        }
+        
+ 
 	/**
 	 * This updates all the registered monitors with the message given to
 	 * this portal
