@@ -121,7 +121,7 @@ public class Testing {
             
            
             
-           // assertEquals(T1P2.getRegisteredAddresses(), P2Test);
+           assertEquals(T1P2.getRegisteredAddresses(), P2Test);
             assertEquals(T1P3.getRegisteredAddresses(), P3Test);
             assertEquals(T1P4.getRegisteredAddresses(), P4Test);
             assertEquals(T1P5.getRegisteredAddresses(), P5Test);

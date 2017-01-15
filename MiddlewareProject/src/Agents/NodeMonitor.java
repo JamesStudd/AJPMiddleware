@@ -59,6 +59,14 @@ public class NodeMonitor extends MetaAgent {
 	}
 
 	/**
+	 * Method used for testing only
+	 * @param node - The node we wish to get the last message from
+	 * @return  - The last message recieved by that node
+	 */
+	public Message getLastMessage(String node){
+		return NodeMessageHistoryMap.get(node).get(NodeMessageHistoryMap.size() -1);
+	}
+	/**
 	 * This method changes the node that is currently being viewed in the GUI 
 	 * to do this, the last message to that node is retrieved and shown and then
 	 * the overall hisory of that node is presented
