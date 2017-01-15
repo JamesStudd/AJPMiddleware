@@ -6,8 +6,7 @@
 package Messages;
 
 /**
- *
- * @author chris
+ * An error flagged when a message is created with the wrong type 
  */
 public class WrongObjectTypeForMessageException extends Exception {
 

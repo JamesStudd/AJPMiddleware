@@ -1,13 +1,14 @@
 package Messages;
 
-/**
- *
- * This class builds a generic message which takes a type 'T' as its object type
- */
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * 
+ * This class builds a generic message which takes a type 'T' as its object type
+ * @param <T>  - The type of message object this message will hold
+ */
 public class Message<T> {
 
 	//The type of object that is being passed out

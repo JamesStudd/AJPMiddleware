@@ -83,7 +83,7 @@ Portal portalOne = new Portal("portalOne");
             String expected = "Passing a message to a user agent in a different portal.";
             Thread.sleep(2000);
             //System.out.println(nm.getLastMessage("portalTwoAgent").retrieveMessageItem() + "1");
-            System.out.println(nm2.getLastMessage("portalTwoAgent").retrieveMessageItem());
+            System.out.println(nm2.getLastMessage("portalTwoAgent").retrieveMessageItem() == expected);
             
             //Thread.sleep(500);
             
