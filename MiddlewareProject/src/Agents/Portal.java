@@ -248,6 +248,9 @@ public class Portal extends MetaAgent {
 		registeredAddresses.put(node, address);
 		if (node == address.toString()) {
 			children.add(address);
+			if(address.getClass() == this.getClass()){
+				updateChildrenWithAddressBook();
+			}
 		}
 		requestChildrenToAddNode(node, address);
 		if (parent != null && address != (parent) && address.getScope(node) != this) {
