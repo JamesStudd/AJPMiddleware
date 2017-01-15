@@ -25,6 +25,7 @@ public class MiddlewareProject {
          
 	public static void main(String[] args) throws InterruptedException {
             
+	/*
             
             //Constructing first tree:
             //Head
@@ -64,6 +65,36 @@ public class MiddlewareProject {
 	   System.out.println("P7 should now have everyone's addresses and the lost message should come through");
 	   p7.showAddresses();
            System.out.println("\n\n");
+
+*/
+//Head
+            Portal HeadPortal = new Portal("HeadPortal", null);
+            //Tier 2
+            Portal T1P2 = new Portal("T1P2", HeadPortal);
+            Portal T1P3 = new Portal("T1P3", HeadPortal);
+	    
+            //Tier 3
+            Portal T1P4 = new Portal("T1P4", T1P2);
+            Portal T1P5 = new Portal("T1P5", T1P3);
+            
+            System.out.println("\n\n");
+            
+              //T1P2
+           UserAgent T1P2One = new UserAgent("T1P2One", T1P2, null);
+           UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
+//            //T1P3
+           UserAgent T1P3One = new UserAgent("T1P3One", T1P3, null);          	    
+//            //T1P4
+           UserAgent T1P4One = new UserAgent("T1P4One", T1P4, null);
+//            //T1P5
+           UserAgent T1P5One = new UserAgent("T1P5One", T1P5, null);
+            
+            Thread.sleep(1000);
+
+
+	    HeadPortal.showAddresses();
+	    T1P3.showAddresses();
+	   
 	}
 
 }
