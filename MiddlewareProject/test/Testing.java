@@ -31,7 +31,7 @@ public class Testing {
      * Tested the 2 maps against each other.
      * @throws InterruptedException
      */
-   // @Test
+    //@Test
     public void testingAddresses() throws InterruptedException { 
         
         
@@ -116,10 +116,10 @@ public class Testing {
     /**
      * Creates 2 user agents on a single portal and sends messages between them. 
      * Checks that the last message received by the node monitor is the same as 
-     * one set.
+     * one sent.
      * @throws InterruptedException
      */
-    @Test
+    //@Test
     public void usersOnSinglePortal() throws InterruptedException { 
         Portal testPortal = new Portal("testPortal");
         
@@ -127,12 +127,12 @@ public class Testing {
         UserAgent userTwo = new UserAgent("userTwo", testPortal, null);
        
         NodeMonitor nm = new NodeMonitor("NM1");
-        NodeMonitor nm2 = new NodeMonitor("NM2");
         
         Thread.sleep(500);
         
 	nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", userOne));
-        nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", userTwo));
+        nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", userTwo));
+        
         
         Thread.sleep(500);
         
@@ -140,11 +140,13 @@ public class Testing {
         
         userTwo.passOverAMessage("userOne", "User two sending a message to user one.");
 
-        Message testMsg1 = new Message(MessageType.PASS_MESSAGE, "userOne", "userTwo", "User one sending a message to user two." );
-        Message testMsg2 = new Message(MessageType.PASS_MESSAGE, "userTwo", "userOne", "User two sending a message to user one." );       
+        String testMsg1 = "User two sending a message to user one.";
+        String testMsg2 = "User one sending a message to user two.";
         Thread.sleep(500);
-        assertEquals(testMsg1, nm2.getLastMessage("NM2")); 
-        assertEquals(testMsg2, nm.getLastMessage("NM1")); 
+        System.out.println(nm.getLastMessage("userOne").retrieveMessageItem());
+        Thread.sleep(500);
+        assertEquals(testMsg2, nm.getLastMessage("userTwo").retrieveMessageItem()); 
+        assertEquals(testMsg1, nm.getLastMessage("userOne").retrieveMessageItem()); 
     }
     
     /**
@@ -175,26 +177,34 @@ public class Testing {
      * the last message in the node monitor is the same as expected.
      * @throws InterruptedException
      */
-    //@Test
+    //@Test //NEEDS DOING, getting the name of the user as a message content and idk why
     public void sendMessageBetweenPortals() throws InterruptedException {        
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo", portalOne);
             
             UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
             UserAgent portalTwoAgent = new UserAgent("portalTwoAgent", portalTwo, null);
+            //NodeMonitor nm = new NodeMonitor("NM1");
+            NodeMonitor nm2 = new NodeMonitor("NM2");
+        
+            Thread.sleep(500);
+        
+            //nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", portalTwoAgent));
+            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalTwoAgent));
+            Thread.sleep(500);
+            System.out.println("just added the node monitor");
             
             Thread.sleep(500);
             
-            portalTwoAgent.passOverAMessage("portalOneAgent", "Passing a message to a user agent in a different portal.");
-            
-            Thread.sleep(500);
-            
-	    
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
             String expected = "Passing a message to a user agent in a different portal.";
+            Thread.sleep(2000);
+            //System.out.println(nm.getLastMessage("portalTwoAgent").retrieveMessageItem() + "1");
+            System.out.println(nm2.getLastMessage("portalTwoAgent").retrieveMessageItem());
             
             Thread.sleep(500);
             
-   //         assertEquals(expected, outContent.toString());
+            assertEquals(expected, nm2.getLastMessage("portalTwoAgent").retrieveMessageItem());
 
     }
     
@@ -210,11 +220,19 @@ public class Testing {
             
             UserAgent agentOne = new UserAgent("agentOne", testPortal, null);
             
+            NodeMonitor nm = new NodeMonitor("NM1");
+        
+            Thread.sleep(500);
+        
+            nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", agentOne)); 
+            
             Thread.sleep(500);
             
             agentOne.passOverAMessage("agentTwo", "Passing a message to a user agent in a different portal.");
             
             Thread.sleep(500);
+            
+            System.out.println(nm.getLastMessage("agentOne").retrieveMessageItem());
     }
     
     /**
