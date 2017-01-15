@@ -64,7 +64,8 @@ public class NodeMonitor extends MetaAgent {
 	 * @return  - The last message recieved by that node
 	 */
 	public Message getLastMessage(String node){
-		return NodeMessageHistoryMap.get(node).get(NodeMessageHistoryMap.size() -1);
+		int size = NodeMessageHistoryMap.get(node).size();
+		return NodeMessageHistoryMap.get(node).get(size-1);
 	}
 	/**
 	 * This method changes the node that is currently being viewed in the GUI 
