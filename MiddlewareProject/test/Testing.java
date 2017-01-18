@@ -31,7 +31,7 @@ public class Testing {
      * Tested the 2 maps against each other.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void testingAddresses() throws InterruptedException { 
         
         
@@ -119,7 +119,7 @@ public class Testing {
      * one sent.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void usersOnSinglePortal() throws InterruptedException { 
         Portal testPortal = new Portal("testPortal");
         
@@ -155,7 +155,7 @@ public class Testing {
      * against the test maps.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void portalPortalLink() throws InterruptedException {
         Portal tier1Portal = new Portal("tier1Portal");
         Portal tier2Portal = new Portal("tier2Portal", tier1Portal);
@@ -177,7 +177,7 @@ public class Testing {
      * the last message in the node monitor is the same as expected.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void sendMessageBetweenPortals() throws InterruptedException {        
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo", portalOne);
@@ -207,7 +207,7 @@ public class Testing {
      * that the sender received an error message.
      * @throws InterruptedException
      */
-    //@Test
+   @Test
     public void sendMessageToUserThatIsNotCreated() throws InterruptedException {
             Portal testPortal = new Portal("testPortal");
             
@@ -235,7 +235,7 @@ public class Testing {
      * an error message equal to what we expect.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void sendMessageToUserOutOfScope() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo", portalOne);
@@ -259,7 +259,7 @@ public class Testing {
      * the node monitor.
      * @throws InterruptedException
      */
-    //@Test 
+    @Test 
     public void creatingUserThatHasMessageWaitingInLostProperty() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
@@ -281,7 +281,7 @@ public class Testing {
      * addresses against a test map created.
      * @throws InterruptedException
      */
-    //@Test
+    @Test
     public void introducingTwoPortals() throws InterruptedException {
             Portal portalOne = new Portal("portalOne");
             Portal portalTwo = new Portal("portalTwo");
@@ -305,7 +305,7 @@ public class Testing {
             assertEquals(testMap, portalOne.getRegisteredAddresses());                                      
     }
     
-    //@Test
+    @Test
 
     /**
      * Creates a portal and populates it with 2 user agents. Then creates a 
