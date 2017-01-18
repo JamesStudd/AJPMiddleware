@@ -229,15 +229,15 @@ public class MessageBoard extends javax.swing.JFrame {
         });
     }
 
-    public void receivedNewMessage(String obj, String type, 
+    public void receivedNewMessage(String node, String obj, String type, 
             String date, String sender, String recip, String history){
 
 
-	    if(!monitoring.contains(recip.trim())){
-		monitoring.add(recip.trim());
-	    	nodesMonitoring.addItem(recip.trim());
+	    if(!monitoring.contains(node)){
+		monitoring.add(node);
+	    	nodesMonitoring.addItem(node);
 	    }
-	    nodesMonitoring.setSelectedItem(recip);
+	    nodesMonitoring.setSelectedItem(node);
 	prevMessageArea.setText(history);
         objectTextArea.setText(obj);
         typeTextField.setText(type);

@@ -76,14 +76,20 @@ Portal portalOne = new Portal("portalOne");
         
         
             //nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", portalTwoAgent));
-            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalTwoAgent));
+            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalOne));
+	    
+            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalTwo));
             Thread.sleep(1500);
             
             portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
+            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
             String expected = "Passing a message to a user agent in a different portal.";
+
+	    System.out.println(nm2.getLastMessage("portalOne"));
             Thread.sleep(2000);
-            //System.out.println(nm.getLastMessage("portalTwoAgent").retrieveMessageItem() + "1");
-            System.out.println(nm2.getLastMessage("portalTwoAgent").retrieveMessageItem() == expected);
             
             //Thread.sleep(500);
             

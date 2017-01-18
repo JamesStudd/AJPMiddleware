@@ -22,7 +22,8 @@ public enum MessageType {
 	ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY(Message.class, "Address not found, adding to lost property"),
 	FAILED_TO_DELIVER(Message.class, "Failed to deliver"),
 	WRONG_TYPE_OF_OBJECT_WAS_SENT_WITH_THIS_MESSAGE(Message.class, "Wrong type of object was sent with this message"),
-	ADD_NODE_MONITOR(MetaAgent.class, "Adding node monitor ");
+	ADD_NODE_MONITOR(MetaAgent.class, "Adding node monitor "),
+	NODE_MONITOR_UPDATE(Message.class, "Updating node monitor");
 
 	Class requiredType;
 	String description;

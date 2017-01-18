@@ -119,7 +119,8 @@ public class Portal extends MetaAgent {
 	private void updateMonitors(Message message) {
 		Iterator<NodeMonitor> it = monitors.iterator();
 		while (it.hasNext()) {
-			it.next().addToQueue(message);
+			NodeMonitor next = it.next();
+			next.addToQueue(new Message(MessageType.NODE_MONITOR_UPDATE, this.toString(),next.toString(), message));
 		};
 	}
 

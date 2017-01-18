@@ -73,7 +73,7 @@ public class UserAgent extends MetaAgent {
 	 * @param message  - The message that has been recieved
 	 */
 	private void updateNodeMonitors(Message message){
-		monitors.forEach(a ->  a.addToQueue(message));
+		monitors.forEach(a ->  a.addToQueue(new Message(MessageType.NODE_MONITOR_UPDATE, this.toString(), a.toString(), message)));
 	}
 
 	/**

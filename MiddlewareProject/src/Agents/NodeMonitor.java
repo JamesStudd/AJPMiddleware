@@ -78,7 +78,7 @@ public class NodeMonitor extends MetaAgent {
 		ArrayList<Message> nodesList = NodeMessageHistoryMap.get(node);
 		if (nodesList != null && !nodesList.isEmpty()) {
 			Message lastMessage = nodesList.get(nodesList.size() - 1);
-			updateAndShowMessage(lastMessage, false);
+			updateAndShowMessage(lastMessage, false, node);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class NodeMonitor extends MetaAgent {
 	 * @param isNewMessage  - A boolean that determines if the message passed is a new one
 	 * 			  or re-displaying of an old one
 	 */
-	private void updateAndShowMessage(Message message, boolean isNewMessage) {
+	private void updateAndShowMessage(Message message, boolean isNewMessage, String nodeBeingMonitored) {
 		String obj, type, sender, recip, date;
 		switch (message.getMessageType()) {
 			case PASS_MESSAGE:
@@ -107,7 +107,7 @@ public class NodeMonitor extends MetaAgent {
 				obj = "Address Updated";
 				break;
 			case ADDRESS_NOT_FOUND_MOVED_TO_LOST_PROPERTY:
-				updateAndShowMessage((Message) message.retrieveMessageItem(), true);
+				updateAndShowMessage((Message) message.retrieveMessageItem(), true, nodeBeingMonitored);
 				return;
 			case FAILED_TO_DELIVER:
 				obj = (String) message.retrieveMessageItem();
@@ -118,14 +118,14 @@ public class NodeMonitor extends MetaAgent {
 			case ADD_NODE_MONITOR:
 				if(isNewMessage){
 					MetaAgent agent = (MetaAgent) message.retrieveMessageItem();
-					agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), agent.toString(), this));
+					agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), nodeBeingMonitored, this));
 					listOfAllNodesThisMonitorIsWatching.add(agent);
-					NodeMessageHistoryMap.put(agent.toString(), new ArrayList());
-					NodeMessageHistoryMap.get(agent.toString()).add(message);
-					NodeHistoryAsStringMap.put(agent.toString(), formatHistory("", message.getMessageType().toString(), 
+					NodeMessageHistoryMap.put(nodeBeingMonitored, new ArrayList());
+					NodeMessageHistoryMap.get(nodeBeingMonitored).add(message);
+					NodeHistoryAsStringMap.put(nodeBeingMonitored, formatHistory("", message.getMessageType().toString(), 
 													message.getTheDateOfCreation(),
 													message.getSender(), message.getRecipient(),
-													NodeHistoryAsStringMap.get(message.getRecipient())));
+													NodeHistoryAsStringMap.get(nodeBeingMonitored)));
 				return;}
 				else{
 					obj = "";
@@ -143,10 +143,10 @@ public class NodeMonitor extends MetaAgent {
 
 		//If This is a new message its details need to be added to the history of that node
 		if (isNewMessage) {
-			NodeHistoryAsStringMap.put(recip, formatHistory(obj, type, date, sender, recip, NodeHistoryAsStringMap.get(recip)));
+			NodeHistoryAsStringMap.put(nodeBeingMonitored, formatHistory(obj, type, date, sender, recip, NodeHistoryAsStringMap.get(nodeBeingMonitored)));
 		}
 
-		monitorGUI.receivedNewMessage(obj, type, date, sender, recip, NodeHistoryAsStringMap.get(recip));
+		monitorGUI.receivedNewMessage(nodeBeingMonitored, obj, type, date, sender, recip, NodeHistoryAsStringMap.get(nodeBeingMonitored));
 	}
 
 	/**
@@ -155,10 +155,22 @@ public class NodeMonitor extends MetaAgent {
 	 */
 	@Override
 	void handle(Message message) {
-		if (NodeMessageHistoryMap.containsKey(message.getRecipient())) {
-			NodeMessageHistoryMap.get(message.getRecipient()).add(message);
+		
+		
+		if (NodeMessageHistoryMap.containsKey(message.getSender())) {
+			NodeMessageHistoryMap.get(message.getSender()).add((Message) message.retrieveMessageItem());
 		}
-		updateAndShowMessage(message, true);
+		switch(message.getMessageType()){
+			case ADD_NODE_MONITOR:
+				updateAndShowMessage(message, true, message.retrieveMessageItem().toString());
+				break;
+			case NODE_MONITOR_UPDATE:
+				updateAndShowMessage((Message) message.retrieveMessageItem(), true, message.getSender());
+				break;
+			default:
+				System.out.println("I should not have any other types of message");
+				return;
+		}
 	}
 
 }
