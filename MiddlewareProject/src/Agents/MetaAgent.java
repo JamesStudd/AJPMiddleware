@@ -55,7 +55,6 @@ public abstract class MetaAgent implements Runnable {
 	public void addToQueue(Message message) {
 		synchronized (lock) {
 			queue.add(message);
-			lock.notify();
 		}
 	}
 
@@ -102,19 +101,13 @@ public abstract class MetaAgent implements Runnable {
 	@Override
 	public void run() {
 
-		synchronized (lock) {
 			while (true) {
 				try {
-					handle(queue.remove());
-				} catch (java.util.NoSuchElementException e) {
-					try {
-						lock.wait();
-					} catch (InterruptedException ex) {
-						Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-					}
+					handle(queue.take());
+				} catch (InterruptedException ex) {
+					Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
-		}
 	}
 
 }
