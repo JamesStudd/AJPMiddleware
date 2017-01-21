@@ -149,9 +149,13 @@ public class NodeMonitor extends MetaAgent {
 		monitorGUI.receivedNewMessage(nodeBeingMonitored, obj, type, date, sender, recip, NodeHistoryAsStringMap.get(nodeBeingMonitored));
 	}
 
+	
+
 	/**
-	 * This method adds the message to the message history and extracts the details to be displayed
-	 * @param message 
+	 * This method adds the message to the message history and extracts the details to be displayed - because we want 
+	 * to instist that only messages meant for the monitor come to the monitor we make sure each message sent is wrapped 
+	 * in a node monitor type message that we extract and pass to be shown
+	 * @param message  - The message passed to the monitor
 	 */
 	@Override
 	void handle(Message message) {
