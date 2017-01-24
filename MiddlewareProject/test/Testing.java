@@ -304,43 +304,4 @@ public class Testing {
           
             assertEquals(testMap, portalOne.getRegisteredAddresses());                                      
     }
-    
-    @Test
-
-    /**
-     * Creates a portal and populates it with 2 user agents. Then creates a 
-     * node monitor and sets it to watch one of the user agents. Sends a message
-     * to the user agent and then checks that the last message gathered by the
-     * node monitor equals an expected message.
-     * @throws InterruptedException
-     */
-    public void defaultNodeMonitor() throws InterruptedException {
-            Portal portalOne = new Portal("portalOne");
-            UserAgent agentOne = new UserAgent("agentOne", portalOne, null);
-            UserAgent agentTwo = new UserAgent("agentTwo", portalOne, null);
-
-            
-            Thread.sleep(500);
-            
-            agentOne.passOverAMessage("agentTwo", "Node monitor test message.");
-                        
-            Thread.sleep(500);
-            
-            NodeMonitor nm = new NodeMonitor("NM1");
-	    nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", agentTwo));
-            
-                 
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    }
+   }

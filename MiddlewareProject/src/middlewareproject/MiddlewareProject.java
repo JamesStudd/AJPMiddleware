@@ -25,76 +25,89 @@ public class MiddlewareProject {
          
 	public static void main(String[] args) throws InterruptedException {
             
-           /* 
-            //Constructing first tree:
-            //Head
-            Portal HeadPortal = new Portal("HeadPortal");
-            //Tier 2
-            Portal T1P2 = new Portal("T1P2", HeadPortal);
-            Portal T1P3 = new Portal("T1P3", HeadPortal);
-	    
-            //Tier 3
-            Portal T1P4 = new Portal("T1P4", T1P2);
-            Portal T1P5 = new Portal("T1P5", T1P3);
-	    Portal P6 = new Portal("6", null);
-	    Portal p7 = new Portal("7", P6);
+            //Master portal
+            Portal headPortal = new Portal("headPortal");
+            //First tier, seperating the tree
+            Portal tier1Left = new Portal("tier1Left", headPortal);
+            Portal tier1Right = new Portal("tier1Right", headPortal);
 
-            NodeMonitor nm = new NodeMonitor("NM1");
-
-	    //Adding in some user agents
-           UserAgent T1P2One = new UserAgent("T1P2One", T1P2, HeadPortal);
-           UserAgent T1P2Two = new UserAgent("T1P2Two", T1P2, null);
-           UserAgent T1P3One = new UserAgent("T1P3One", T1P3, null);
-           UserAgent T1P4One = new UserAgent("T1P4One", T1P4, null);
-           UserAgent T1P5One = new UserAgent("T1P5One", T1P5, T1P5);
-
-	   nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", P6));
-	   UserAgent a = new UserAgent("a", p7, T1P3);
-	   UserAgent b = new UserAgent("b", p7, null);
-	   nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", T1P5));
-	   b.passOverAMessage("T1P2One", "I am a message that will go through lost property");
-	   System.out.println("P7 before parent introduction");
-	   Thread.sleep(3000);
-	   p7.showAddresses();
-
-	   //Introduces two parents
-	   P6.setParent(T1P5);
-
-	   Thread.sleep(3000);
-	   System.out.println("P7 should now have everyone's addresses and the lost message should come through");
-	   p7.showAddresses();
-           System.out.println("\n\n");
-
-*/
-Portal portalOne = new Portal("portalOne");
-            Portal portalTwo = new Portal("portalTwo", portalOne);
+            //Generating portals for left side of tree
+            Portal leftPortal1 = new Portal("leftPortal1", tier1Left);
+            Portal leftPortal2 = new Portal("leftPortal2", tier1Left);
+            Portal leftPortal3 = new Portal("leftPortal3", tier1Left);
+            Portal leftPortal4 = new Portal("leftPortal4", tier1Left);
             
-            UserAgent portalOneAgent = new UserAgent("portalOneAgent", portalOne, null);
-            UserAgent portalTwoAgent = new UserAgent("portalTwoAgent", portalTwo, null);
-            //NodeMonitor nm = new NodeMonitor("NM1");
-            NodeMonitor nm2 = new NodeMonitor("NM2");
-        
-        
-            //nm.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM1", portalTwoAgent));
-            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalOne));
-	    
-            nm2.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, "", "NM2", portalTwo));
-            Thread.sleep(1500);
+            //Generating portals for right side of tree
+            Portal rightPortal1 = new Portal("rightPortal1", tier1Right);
+            Portal rightPortal2 = new Portal("rightPortal2", tier1Right);
+            Portal rightPortal3 = new Portal("rightPortal3", tier1Right);
+            Portal rightPortal4 = new Portal("rightPortal4", tier1Right);
             
-            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
-            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
-            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
-            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
-            portalOneAgent.passOverAMessage("portalTwoAgent", "Passing a message to a user agent in a different portal.");
-            String expected = "Passing a message to a user agent in a different portal.";
+            //Creating user agents for left side of tree:
+            
+            //Tier 1 Left:
+            UserAgent tier1LeftAgent1 = new UserAgent("tier1LeftAgent1", tier1Left, null);
+            UserAgent tier1LeftAgent2 = new UserAgent("tier1LeftAgent2", tier1Left, null);
+            
+            //Generating user agents for the children portals (left side)
+            UserAgent leftPortal1Agent1 = new UserAgent("leftPortal1Agent1", leftPortal1, null);
+            UserAgent leftPortal1Agent2 = new UserAgent("leftPortal1Agent2", leftPortal1, null);
+            UserAgent leftPortal1Agent3 = new UserAgent("leftPortal1Agent3", leftPortal1, null);
+            UserAgent leftPortal1Agent4 = new UserAgent("leftPortal1Agent4", leftPortal1, null);
+            
+            UserAgent leftPortal2Agent1 = new UserAgent("leftPortal2Agent1", leftPortal2, null);
+            UserAgent leftPortal2Agent2 = new UserAgent("leftPortal2Agent2", leftPortal2, null);
+            UserAgent leftPortal2Agent3 = new UserAgent("leftPortal2Agent1", leftPortal3, null);
+            UserAgent leftPortal2Agent4 = new UserAgent("leftPortal2Agent1", leftPortal4, null);
 
-	    System.out.println(nm2.getLastMessage("portalOne"));
-            Thread.sleep(2000);
-            
-            //Thread.sleep(500);
-            
-	    //System.out.println(nm2.getLastMessage("portalTwoAgent").retrieveMessageItem());
- //           assertEquals(expected, nm2.getLastMessage("portalTwoAgent").retrieveMessageItem());
+            UserAgent leftPortal3Agent1 = new UserAgent("leftPortal3Agent1", leftPortal3, null);
+            UserAgent leftPortal3Agent2 = new UserAgent("leftPortal3Agent2", leftPortal3, null);
+            UserAgent leftPortal3Agent3 = new UserAgent("leftPortal3Agent3", leftPortal3, null);
+            UserAgent leftPortal3Agent4 = new UserAgent("leftPortal3Agent4", leftPortal3, null);
 
-}
-}
+            UserAgent leftPortal4Agent1 = new UserAgent("leftPortal4Agent1", leftPortal4, null);
+            UserAgent leftPortal4Agent2 = new UserAgent("leftPortal4Agent2", leftPortal4, null);
+            UserAgent leftPortal4Agent3 = new UserAgent("leftPortal4Agent3", leftPortal4, null);
+            UserAgent leftPortal4Agent4 = new UserAgent("leftPortal4Agent4", leftPortal4, null);
+            
+            //Creating user agents for right side of tree:
+            
+            //Tier 1 Right:
+            UserAgent tier1RightAgent1 = new UserAgent("tier1RightAgent1", tier1Right, null);
+            UserAgent tier1RightAgent2 = new UserAgent("tier1RightAgent2", tier1Right, null);
+            
+            //Generating user agents for the children portals (right side)
+            UserAgent rightPortal1Agent1 = new UserAgent("rightPortal1Agent1", rightPortal1, null);
+            UserAgent rightPortal1Agent2 = new UserAgent("rightPortal1Agent2", rightPortal1, null);
+            UserAgent rightPortal1Agent3 = new UserAgent("rightPortal1Agent3", rightPortal1, null);
+            UserAgent rightPortal1Agent4 = new UserAgent("rightPortal1Agent4", rightPortal1, null);
+            
+            UserAgent rightPortal2Agent1 = new UserAgent("rightPortal2Agent1", rightPortal2, null);
+            UserAgent rightPortal2Agent2 = new UserAgent("rightPortal2Agent2", rightPortal2, null);
+            UserAgent rightPortal2Agent3 = new UserAgent("rightPortal2Agent3", rightPortal2, null);
+            UserAgent rightPortal2Agent4 = new UserAgent("rightPortal2Agent4", rightPortal2, null);
+            
+            UserAgent rightPortal3Agent1 = new UserAgent("rightPortal3Agent1", rightPortal3, null);
+            UserAgent rightPortal3Agent2 = new UserAgent("rightPortal3Agent2", rightPortal3, null);
+            UserAgent rightPortal3Agent3 = new UserAgent("rightPortal3Agent3", rightPortal3, null);
+            UserAgent rightPortal3Agent4 = new UserAgent("rightPortal3Agent4", rightPortal3, null);
+            
+            UserAgent rightPortal4Agent1 = new UserAgent("rightPortal4Agent1", rightPortal4, null);
+            UserAgent rightPortal4Agent2 = new UserAgent("rightPortal4Agent2", rightPortal4, null);
+            UserAgent rightPortal4Agent3 = new UserAgent("rightPortal4Agent3", rightPortal4, null);
+            UserAgent rightPortal4Agent4 = new UserAgent("rightPortal4Agent4", rightPortal4, null);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        }
+        }
