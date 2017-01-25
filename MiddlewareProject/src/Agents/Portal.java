@@ -127,11 +127,11 @@ public class Portal extends MetaAgent {
 	/**
 	 * Checks if the passed string is the same as this portal
 	 *
-	 * @param x
-	 * @return
+	 * @param agent - The agent which we are checking against
+	 * @return true if this message is for this object
 	 */
-	private boolean isForMe(String x) {
-		return x == this.toString();
+	private boolean isForMe(String agent) {
+		return agent == this.toString();
 	}
 
 	/**

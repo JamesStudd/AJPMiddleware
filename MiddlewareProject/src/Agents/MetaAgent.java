@@ -68,7 +68,7 @@ public abstract class MetaAgent implements Runnable {
 	/**
 	 * Get the scope by which the object is defined
 	 *
-	 * @return
+	 * @return - The scope of this agent
 	 */
 	public MetaAgent getScope() {
 		return scope;
