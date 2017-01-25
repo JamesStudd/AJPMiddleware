@@ -1,5 +1,23 @@
 # AJPMiddleware
 
+The aim of this project was to create a thin middleware layer in Java based on the concept of actors and meta-agents, and allow for each to work concurrently. Using the meta-agents, portals were built which are able to manage agent to agent communication. Each user agent is able to be scoped locally or globally. They also allow for NodeMonitors to be attached to track the messages sent and received.
+
+# Running the project
+
+The main method resides in the "MiddlewareProject" java file. This method creates multiple Portals, each with multiple UserAgents attached.
+
+# Testing the project
+
+Each test is in the file "Testing" inside Test Packages. These tests:
+- Create Portals with UserAgents attached
+- Add NodeMonitors
+- Pass messages from one UserAgent to another locally
+- Introduce 2 Portals together
+- Pass messages from one UserAgent to another globally
+- Pass messages to non-existant UserAgents
+- Pass messages to a UserAgent out of scope
+
+*****
 
 Initial Middleware Group Checklist (deadlines can be added)
 
