@@ -96,6 +96,7 @@ public class MessageBoard extends javax.swing.JFrame {
 
                 prevMessageArea.setColumns(20);
                 prevMessageArea.setRows(5);
+                prevMessageArea.setMinimumSize(new java.awt.Dimension(20, 50));
                 jScrollPane2.setViewportView(prevMessageArea);
 
                 jLabel6.setText("Previous Messages");
@@ -160,7 +161,7 @@ public class MessageBoard extends javax.swing.JFrame {
                                         .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(dateTextField)
                                         .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -175,7 +176,7 @@ public class MessageBoard extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane2)
                                 .addGap(15, 15, 15))
                 );
 

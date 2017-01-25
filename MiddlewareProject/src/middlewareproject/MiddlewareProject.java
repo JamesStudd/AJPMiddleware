@@ -27,6 +27,10 @@ public class MiddlewareProject {
             
             //Master portal
             Portal headPortal = new Portal("headPortal");
+
+	    NodeMonitor monitor = new NodeMonitor("mainMonitor");
+
+	    monitor.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, headPortal.toString(), monitor.toString(), headPortal));
             //First tier, seperating the tree
             Portal tier1Left = new Portal("tier1Left", headPortal);
             Portal tier1Right = new Portal("tier1Right", headPortal);

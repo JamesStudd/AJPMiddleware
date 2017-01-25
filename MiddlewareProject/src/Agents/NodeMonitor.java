@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The node monitor is a GUI supporting monitor that can be hooked to agents 
- * and then displays any messages that pass to them
+ * The node monitor is a GUI supporting monitor that can be hooked to agents and
+ * then displays any messages that pass to them
  */
 public class NodeMonitor extends MetaAgent {
 
@@ -26,8 +26,10 @@ public class NodeMonitor extends MetaAgent {
 	HashMap<String, String> NodeHistoryAsStringMap = new HashMap<>();
 
 	/**
-	 * Constructor for the node monitor, creates a GUI instance and makes this visable
-	 * @param name  - The name of the monitor
+	 * Constructor for the node monitor, creates a GUI instance and makes
+	 * this visable
+	 *
+	 * @param name - The name of the monitor
 	 */
 	public NodeMonitor(String name) {
 		super(name);
@@ -35,17 +37,17 @@ public class NodeMonitor extends MetaAgent {
 		monitorGUI.setVisible(true);
 	}
 
-	
 	/**
-	 * 
-	 *  Adds a new entry to the passed history of activity string
+	 *
+	 * Adds a new entry to the passed history of activity string
+	 *
 	 * @param message - The message details
 	 * @param type - The type of message to be added
 	 * @param date - The date the message was created
-	 * @param sender - The sender of the message  
+	 * @param sender - The sender of the message
 	 * @param recip - The recipient of the message
 	 * @param previousHistory - The previous history of that node
-	 * @return A formatted node history 
+	 * @return A formatted node history
 	 */
 	private String formatHistory(String message, String type, String date, String sender, String recip, String previousHistory) {
 
@@ -60,18 +62,21 @@ public class NodeMonitor extends MetaAgent {
 
 	/**
 	 * Method used for testing only
+	 *
 	 * @param node - The node we wish to get the last message from
-	 * @return  - The last message recieved by that node
+	 * @return - The last message recieved by that node
 	 */
-	public Message getLastMessage(String node){
+	public Message getLastMessage(String node) {
 		int size = NodeMessageHistoryMap.get(node).size();
-		return NodeMessageHistoryMap.get(node).get(size-1);
+		return NodeMessageHistoryMap.get(node).get(size - 1);
 	}
+
 	/**
-	 * This method changes the node that is currently being viewed in the GUI 
-	 * to do this, the last message to that node is retrieved and shown and then
-	 * the overall hisory of that node is presented
-	 * @param node 
+	 * This method changes the node that is currently being viewed in the
+	 * GUI to do this, the last message to that node is retrieved and shown
+	 * and then the overall hisory of that node is presented
+	 *
+	 * @param node
 	 */
 	public void changeNodeTo(String node) {
 
@@ -85,9 +90,10 @@ public class NodeMonitor extends MetaAgent {
 	/**
 	 * This method extracts the relevant information from the passed message
 	 * and passes that to the GUI to display
+	 *
 	 * @param message - The message to be shown
-	 * @param isNewMessage  - A boolean that determines if the message passed is a new one
-	 * 			  or re-displaying of an old one
+	 * @param isNewMessage - A boolean that determines if the message passed
+	 * is a new one or re-displaying of an old one
 	 */
 	private void updateAndShowMessage(Message message, boolean isNewMessage, String nodeBeingMonitored) {
 		String obj, type, sender, recip, date;
@@ -116,20 +122,7 @@ public class NodeMonitor extends MetaAgent {
 				obj = (String) message.retrieveMessageItem();
 				break;
 			case ADD_NODE_MONITOR:
-				if(isNewMessage){
-					MetaAgent agent = (MetaAgent) message.retrieveMessageItem();
-					agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), nodeBeingMonitored, this));
-					listOfAllNodesThisMonitorIsWatching.add(agent);
-					NodeMessageHistoryMap.put(nodeBeingMonitored, new ArrayList());
-					NodeMessageHistoryMap.get(nodeBeingMonitored).add(message);
-					NodeHistoryAsStringMap.put(nodeBeingMonitored, formatHistory("", message.getMessageType().toString(), 
-													message.getTheDateOfCreation(),
-													message.getSender(), message.getRecipient(),
-													NodeHistoryAsStringMap.get(nodeBeingMonitored)));
-				return;}
-				else{
-					obj = "";
-				}
+				obj = "Adding a node monitor";
 				break;
 			default:
 				obj = "";
@@ -137,7 +130,7 @@ public class NodeMonitor extends MetaAgent {
 		}
 
 		type = message.getMessageType().toString();
-		sender = message.getSender(); 
+		sender = message.getSender();
 		recip = message.getRecipient();
 		date = message.getTheDateOfCreation();
 
@@ -149,24 +142,42 @@ public class NodeMonitor extends MetaAgent {
 		monitorGUI.receivedNewMessage(nodeBeingMonitored, obj, type, date, sender, recip, NodeHistoryAsStringMap.get(nodeBeingMonitored));
 	}
 
-	
+	/**
+	 * This method adds the node to the watch list and creates a history for that node, it then sends a request to that node
+	 * to add this object to its list of watchers
+	 * @param message  - The message containing the request to add a node to this monitors watch list
+	 */
+	private void addNodeMontior(Message message) {
+
+		MetaAgent agent = (MetaAgent) message.retrieveMessageItem();
+		agent.addToQueue(new Message(MessageType.ADD_NODE_MONITOR, this.toString(), agent.toString(), this));
+		listOfAllNodesThisMonitorIsWatching.add(agent);
+		NodeMessageHistoryMap.put(agent.toString(), new ArrayList());
+		NodeMessageHistoryMap.get(agent.toString()).add(message);
+		NodeHistoryAsStringMap.put(agent.toString(), formatHistory("", message.getMessageType().toString(),
+						message.getTheDateOfCreation(),
+						message.getSender(), message.getRecipient(),
+						NodeHistoryAsStringMap.get(agent.toString())));
+	}
 
 	/**
-	 * This method adds the message to the message history and extracts the details to be displayed - because we want 
-	 * to instist that only messages meant for the monitor come to the monitor we make sure each message sent is wrapped 
-	 * in a node monitor type message that we extract and pass to be shown
-	 * @param message  - The message passed to the monitor
+	 * This method adds the message to the message history and extracts the
+	 * details to be displayed - because we want to insist that only
+	 * messages meant for the monitor come to the monitor we make sure each
+	 * message sent is wrapped in a node monitor type message that we
+	 * extract and pass to be shown
+	 *
+	 * @param message - The message passed to the monitor
 	 */
 	@Override
 	void handle(Message message) {
-		
-		
+
 		if (NodeMessageHistoryMap.containsKey(message.getSender())) {
 			NodeMessageHistoryMap.get(message.getSender()).add((Message) message.retrieveMessageItem());
 		}
-		switch(message.getMessageType()){
+		switch (message.getMessageType()) {
 			case ADD_NODE_MONITOR:
-				updateAndShowMessage(message, true, message.retrieveMessageItem().toString());
+				addNodeMontior(message);
 				break;
 			case NODE_MONITOR_UPDATE:
 				updateAndShowMessage((Message) message.retrieveMessageItem(), true, message.getSender());

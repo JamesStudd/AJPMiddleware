@@ -10,14 +10,10 @@ import Agents.Portal;
 import Agents.UserAgent;
 import Messages.Message;
 import Messages.MessageType;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import org.junit.After;
-import org.junit.Before;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Testing class
